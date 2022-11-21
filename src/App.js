@@ -1,6 +1,6 @@
 import NaverMapView from "./map";
 
-const Map =()=>{ 
+const App =()=>{ 
 	let mapLat = "37.23229";
 	let mapLng = "127.188205";
     return(
@@ -10,7 +10,7 @@ const Map =()=>{
     );    
 }
     
-export default Map;
+export default App;
 
 
 

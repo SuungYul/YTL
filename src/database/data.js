@@ -81,66 +81,15 @@ import { forwardRef } from "react";
     }
 };
 
-/**
- * User 클래스
- * 
- * 임시적으로 User 클래스를 작성함
- */
-class User extends ForFirebase{
-    constructor(id, pw, name, team, userID, 
-                playCount, badPoint, userKey, history,
-                currentReserve){
+class Crosswalk extends ForFirebase{
+    constructor(cycle, duration, measureTime, order, position, waitingTime){
         super();
-        this.id = id;
-        this.pw = pw;
-        this.name = name;
-        this.team = team;
-        this.userID = userID;
-        this.playCount = playCount;
-        this.badPoint = badPoint;
-        this.userKey = userKey;
-        this.history = history;
-        this.currentReserve = currentReserve;
-    }
-};
-
-class Team extends ForFirebase{
-    constructor(leader, member, teamName){
-        super();
-        this.leader = leader;
-        this.member = member;
-        this.teamName = teamName;
-    }
-};
-
-class ReserveTeam extends ForFirebase{
-    constructor(teamInfo, playerArray, playCount, day, time, order, withOther=false){
-        super();
-        this.playerArray = playerArray;
-        this.playCount = playCount;
-        this.teamInfo = teamInfo;
-        this.day = day;
-        this.time = time;
+        this.cycle = cycle;
+        this.duration = duration;
+        this.measureTime = measureTime;
         this.order = order;
-        this.withOther = withOther
+        this.position = position
+        this.waitingTime = waitingTime;
     }
-    get countArray(){
-        return this.playerArray.length;
-    }
-    get hasTeam(){
-        return this.teamInfo != -1? this.teamInfo: null;
-    }
-};
-
-class MatchInfo extends ForFirebase{
-    constructor(team1, team2 , allPlayerArray, day, time){
-        super();
-        this.allPlayerArray = allPlayerArray;
-        this.team1 = team1;
-        this.team2 = team2;
-        this.day = day;
-        this.time = time;
-    }
-};
-
-export {ForFirebase, User, Team, ReserveTeam, MatchInfo};
+}
+export {ForFirebase, Crosswalk};

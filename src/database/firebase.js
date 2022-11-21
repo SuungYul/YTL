@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { ForFirebase, User } from "../database/data";
-import { mergeSort } from "../algorithm/algorithm";
+import { Crosswalk, ForFirebase, User } from "../database/data";
 
 const firebaseConfig = require("../token.json");
 
@@ -21,9 +20,6 @@ function testFunction(collection){
         });
     });
 }
-// function countUser(){
-//   db.collection(userList).
-// }
 
 /** 
  * 파이어베이스 스토리지에 데이터를 추가하는 함수
@@ -92,12 +88,11 @@ function fieldUpdate(collection, document, updateObj){ //문서내에 필드를 
   })
 }
 /** 
- * 파이어베이스 스토리지에 데이터를 추가하는 함수
+ * 파이어베이스 스토리지에 데이터 필터링하여 doc 형식으로 가져옴
  * @param {string} collection Firestore에 저장된 collection 이름
  * @param {string} key Firestore에 위치한 document의 key값
  * @param {string} filter value 의 조건 비교 문자열만 가능("==", ">", "<")
  */
-
 
 async function getFilteredDocs(collection, key, filter, value ){
     return db.collection(collection).where(key, filter, value)
@@ -121,57 +116,6 @@ async function getDocs(collection){
     .catch((error) => {
         console.log("Error getting documents: ", error);
     });
-}
-
-async function getDocsByOrder(collection, compare){
-  return db.collection(collection)
-    .get()
-    .then((querySnapshot) => {
-        return mergeSort(querySnapshot.docs, compare);
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
-}
-
-async function getDocsByOrderKey(collection, key, reverse = false){
-  return db.collection(collection)
-  .get()
-  .then((querySnapshot) => {
-      let result = new Array();
-      querySnapshot.docs.forEach((doc)=>{
-        result.push(doc.data());
-      })
-
-      return mergeSort(result, (x, y) => {
-        if(reverse) return x[key] > y[key];
-        return x[key] < y[key];
-      });
-  })
-  .catch((error) => {
-      console.log("Error getting documents: ", error);
-  });
-}
-
-async function getReserveOrder(collection, day, time, key, reverse = false){
-  return db.collection(collection)
-  .where("day", "==", day)
-  .where("time", "==", time)
-  .get()
-  .then((querySnapshot) => {
-      let result = new Array();
-      querySnapshot.docs.forEach((doc)=>{
-        result.push(doc.data());
-      })
-
-      return mergeSort(result, (x, y) => {
-        if(reverse) return x[key] > y[key];
-        return x[key] < y[key];
-      });
-  })
-  .catch((error) => {
-      console.log("Error getting documents: ", error);
-  });
 }
 
 
@@ -257,56 +201,20 @@ function getData(collection, document, type){
   })
 };
 
-function playCountIncrement(collection, user){
+function getPosition(collection, document) {
   return new Promise((resolve, reject) => {
-      let userRef = db.collection(collection).doc(user);
+      firebase.firestore().collection(collection)
+          .doc(document)
+          .withConverter(Crosswalk)
+          .get()
+          .then((querySnapshot) => {
+              resolve(querySnapshot)
+          })
+          .catch((error) => {
+              reject(error);
+          });
+  })
+}
 
-      userRef.update({
-        playcount: firebase.firestore.FieldValue.increment(1)
-      });
-
-      resolve(true);
-  });
-};
-
-
-function playCountDecrement(collection, user){
-  return new Promise((resolve, reject) => {
-      let userRef = db.collection(collection).doc(user);
-      userRef.update({
-        playcount: firebase.firestore.FieldValue.increment(-1)
-      });
-
-      resolve(true);
-  });
-};
-
-function badPointIncrement(collection, user, point){
-  return new Promise((resolve, reject) => {
-      let userRef = db.collection(collection).doc(user);
-
-      userRef.update({
-        badPoint: firebase.firestore.FieldValue.increment(point)
-      });
-
-      resolve(true);
-  });
-};
-
-
-function badPointDecrement(collection, user, point){
-  return new Promise((resolve, reject) => {
-      let userRef = db.collection(collection).doc(user);
-      userRef.update({
-        badPoint: firebase.firestore.FieldValue.increment(-1*point)
-      });
-
-      resolve(true);
-  });
-};
-
-
-export const authService = firebase.auth();
-export {testFunction, addData, getData, deleteData, playCountIncrement, badPointIncrement, badPointDecrement,
-  getFilteredDocs, playCountDecrement, getDocs, fieldUpdate, checkDocConflict, addDataCreateDoc, 
-  getDocsByOrder, getDocsByOrderKey, getReserveOrder, fieldUpdateConvertor };
+export {testFunction, addData, getData, deleteData, getFilteredDocs, getDocs, fieldUpdate, checkDocConflict, addDataCreateDoc, 
+ fieldUpdateConvertor, getPosition };
