@@ -7,11 +7,16 @@ import { getPosition, getData, db, getDocs } from "../database/firebase";
 
 const Map = ({ mapLat, mapLng }) => {
   let index = 0;
-
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [result, setResult] = useState([]);
   const [totalDB, setTotalDB] = useState([]);
+  const [totalPos, setTotalPos] = useState([]);
+  const [totalTime, setTotalTime] = useState([]);
   const [isLoad, setLoad] = useState(false);
+  const [center, setCenter] = useState({
+    lat: mapLat,
+    lng: mapLng,
+  });
   useEffect(() => {
     index = 0;
     const totalDBPromise = getDocs("crosswalk");
@@ -24,54 +29,55 @@ const Map = ({ mapLat, mapLng }) => {
     });
 
     totalDB.forEach((value) => {
-      const marker = MakeMarker(value);
-      console.log(marker);
-      setResult((prevResult) => [...prevResult, marker]);
+      for (let i = 0; i < value.position.length; i++) {
+        setTotalPos((prevPos) => [...prevPos, value.position[i]]);
+        setTotalTime((prevTime) => [...prevTime, value.duration[i]]);
+      }
+
+      // const marker = MakeMarker(value);
+      // console.log(marker);
     });
+    for (let i = 0; i < totalPos.length; i++, index++) {
+      const pos = {
+        lat: totalPos[i]._lat,
+        lng: totalPos[i]._long,
+      };
+      const content = {
+        content: [
+          '<div class="cs_mapbridge">',
+          '<div class="map_group _map_group">',
+          '<div class="map_marker _marker tvhp tvhp_big">',
+          '<span class="ico _icon"></span>',
+          '<span class="shd">',
+          totalTime[i],
+          "</span>",
+          "</div>",
+          "</div>",
+          "</div>",
+        ].join(""),
+      };
+      setResult((prevRes) => [
+        ...prevRes,
+        <Marker key={index} position={pos} icon={content} />,
+      ]);
+    }
+    console.log(totalPos);
+    console.log(totalTime);
+    const interval = setInterval(() => {
+      setTotalTime(
+        totalTime.map((value) => {
+          //시발 모르겠다
+          return value === 0 ? 180 - value : value - 1;
+        })
+      );
+    }, 1000);
     setLoad(true);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
-  const MakeMarker = (db) => {
-    if (!db) {
-      console.log("Not db!");
-      return;
-    }
-    const content = {
-      content: [
-        '<div class="cs_mapbridge">',
-        '<div class="map_group _map_group">',
-        '<div class="map_marker _marker tvhp tvhp_big">',
-        '<span class="ico _icon"></span>',
-        '<span class="shd">',
-        db.cycle,
-        "</span>",
-        "</div>",
-        "</div>",
-        "</div>",
-      ].join(""),
-    };
-
-    const markers = [];
-    for (let i = 0; i < db.position.length; i++) {
-      const pos = {
-        // 이새끼 절때 for문 밖으로 내보내지말것
-        lat: 0,
-        lng: 0,
-      };
-      pos.lat = db.position[i]._lat;
-      pos.lng = db.position[i]._long;
-      markers.push(
-        <Marker
-          key={index++}
-          position={pos}
-          onClick={() => {
-            alert(pos);
-          }}
-        />
-      );
-    }
-    return markers;
-  };
   return isLoad ? (
     <>
       <RenderAfterNavermapsLoaded
@@ -82,7 +88,8 @@ const Map = ({ mapLat, mapLng }) => {
         <NaverMap
           id="react-naver-maps"
           style={{ width: "100%", height: "100vh" }}
-          center={{ lat: mapLat, lng: mapLng }}
+          center={center}
+          //onCenterChanged={(center) => setCenter({ center })}
           defaultZoom={16}
         >
           {result}
@@ -91,14 +98,12 @@ const Map = ({ mapLat, mapLng }) => {
             onClick={() => {
               alert("여기는 입구입니다");
             }}
-
-            // clickable={true}
           />
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     </>
   ) : (
-    "Loading..."
+    "Loading...."
   );
 };
 
