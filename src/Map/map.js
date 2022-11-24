@@ -2,11 +2,14 @@ import { getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { NaverMap, Marker } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
+import FindFastRoute from "../Algorithm/FindFastRoute";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
 
 const Map = ({ mapLat, mapLng }) => {
   let index = 0;
+  
+  FindFastRoute("shortRoute","road1","road5")
 
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [result, setResult] = useState([]);

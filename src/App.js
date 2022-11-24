@@ -1,5 +1,6 @@
 import Map from "./Map/map";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
+import FindFastRoute from "./Algorithm/FindFastRoute";
 const App = () => {
   let mapLat = "37.23229";
   let mapLng = "127.188205";
