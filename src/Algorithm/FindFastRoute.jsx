@@ -21,9 +21,13 @@ function dfs(roadArray, crossArray, roadNameArray, crossNameArray, currentRoad, 
   if (currentRoad == endRoad) {
 
     if (lasttime > time) {
-      lastRoute = rememberRoute
+      // lastRoute = JSON.parse(JSON.stringify(rememberRoute));
+      // lastRoute = _.cloneDeep(objects);
+      lastRoute = []
+      rememberRoute.forEach((doc) => {
+        lastRoute.push(doc)
+      })
       lasttime = time
-      console.log(lastRoute, time)
       //여기서 전역변수인 lastRoute를 변경해도 마지막에 변경이 안됨 93번쨰를 보세요
     }
   }
@@ -90,7 +94,7 @@ function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
 
    
     dfs(roadArray, crossArray, roadNameArray, crossNameArray, startPoint, rememberRoute, endPoint, 0)
-    console.log(lasttime)
+    console.log(lastRoute,lasttime)
     //여기서 lastRoute를 호출하면 안들어잇다고 나옴
   })
 
