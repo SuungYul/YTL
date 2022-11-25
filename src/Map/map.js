@@ -2,79 +2,94 @@ import { getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { NaverMap, Marker } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
+import CheckGreen from "../Algorithm/CheckGreen";
 import FindFastRoute from "../Algorithm/FindFastRoute";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
 
 const Map = ({ mapLat, mapLng }) => {
-  let index = 0;
-  
-  FindFastRoute("shortRoute","road1","road5")
+  //FindFastRoute("shortRoute", "road1", "road5");
 
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [result, setResult] = useState([]);
   const [totalDB, setTotalDB] = useState([]);
+
   const [isLoad, setLoad] = useState(false);
+  const [center, setCenter] = useState({
+    lat: mapLat,
+    lng: mapLng,
+  });
   useEffect(() => {
-    index = 0;
-    const totalDBPromise = getDocs("crosswalk");
-    totalDBPromise.then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        if (!totalDB.includes(doc.data())) {
-          setTotalDB((prevList) => [...prevList, doc.data()]);
+    let index = 0;
+    let p = []; // db doc안에 모든 position 좌표
+    let t = []; // db doc안에 모든 duration 시간 근데 얘는 변화가 될수도?
+    let time = []; // 일단 임시로 두개 받음
+    let isGreen = []; // 지금 초록불인지 이것도 필요없을듯
+    let mt = []; //measureTime 가져옴
+    let wt = []; //waitingTime 가져옴
+    setTimeout(() => {
+      const totalDBPromise = getDocs("crosswalk");
+
+      totalDBPromise.then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          if (!totalDB.includes(doc.data())) {
+            setTotalDB((prevList) => [...prevList, doc.data()]);
+          }
+        });
+      });
+      console.log(totalDB);
+      totalDB.forEach((value) => {
+        for (let i = 0; i < value.position.length; i++) {
+          p.push(value.position[i]);
+
+          t.push(value.duration[i]);
+          time.push(value.duration[i]);
+          isGreen.push(true);
+          mt.push(value.measureTime);
+          wt.push(value.waitingTime[i]);
         }
       });
-    });
+    }, 500); //0.5초 기다려서 db 받는거 기다림 이렇게 해도 컴파일시 실행안되는거는 똑같은듯
 
-    totalDB.forEach((value) => {
-      const marker = MakeMarker(value);
-      console.log(marker);
-      setResult((prevResult) => [...prevResult, marker]);
-    });
+    const interval = setInterval(() => {
+      const r = [];
+      for (let i = 0; i < t.length; i++) {
+        console.log(mt[i], t[i], wt[i])
+        const check = CheckGreen(mt[i], t[i], wt[i]);
+        r.push(
+          <Marker
+            key={index++}
+            position={{
+              lat: p[i]._lat,
+              lng: p[i]._long,
+            }}
+            icon={{
+              content: [
+                '<div class="cs_mapbridge">',
+                '<div class="map_group _map_group">',
+                '<div class="map_marker _marker tvhp tvhp_big">',
+                '<span class="ico _icon"></span>',
+                '<span class="shd">',
+                check.time,
+                "</span>",
+                "</div>",
+                "</div>",
+                "</div>",
+              ].join(""),
+            }}
+          />
+        );
+      }
+      setResult(r);
+      console.log(5232)
+    }, 2000); //1초씩 마커 변화
     setLoad(true);
-  }, []);
 
-  const MakeMarker = (db) => {
-    if (!db) {
-      console.log("Not db!");
-      return;
-    }
-    const content = {
-      content: [
-        '<div class="cs_mapbridge">',
-        '<div class="map_group _map_group">',
-        '<div class="map_marker _marker tvhp tvhp_big">',
-        '<span class="ico _icon"></span>',
-        '<span class="shd">',
-        db.cycle,
-        "</span>",
-        "</div>",
-        "</div>",
-        "</div>",
-      ].join(""),
+    return () => {
+      clearInterval(interval);
     };
-
-    const markers = [];
-    for (let i = 0; i < db.position.length; i++) {
-      const pos = {
-        // 이새끼 절때 for문 밖으로 내보내지말것
-        lat: 0,
-        lng: 0,
-      };
-      pos.lat = db.position[i]._lat;
-      pos.lng = db.position[i]._long;
-      markers.push(
-        <Marker
-          key={index++}
-          position={pos}
-          onClick={() => {
-            alert(pos);
-          }}
-        />
-      );
-    }
-    return markers;
-  };
+  }, []);
+  // console.log(result);
   return isLoad ? (
     <>
       <RenderAfterNavermapsLoaded
@@ -85,8 +100,9 @@ const Map = ({ mapLat, mapLng }) => {
         <NaverMap
           id="react-naver-maps"
           style={{ width: "100%", height: "100vh" }}
-          center={{ lat: mapLat, lng: mapLng }}
-          defaultZoom={16}
+          center={center}
+          //onCenterChanged={(center) => setCenter({ center })}
+          defaultZoom={17}
         >
           {result}
           <Marker
@@ -94,14 +110,12 @@ const Map = ({ mapLat, mapLng }) => {
             onClick={() => {
               alert("여기는 입구입니다");
             }}
-
-            // clickable={true}
           />
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     </>
   ) : (
-    "Loading..."
+    "Loading...."
   );
 };
 
