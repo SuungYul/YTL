@@ -56,6 +56,7 @@ const Map = ({ mapLat, mapLng }) => {
       for (let i = 0; i < t.length; i++) {
         console.log(mt[i], t[i], wt[i]);
         const check = CheckGreen(mt[i], t[i], wt[i]);
+        console.log(check.currentSign, check.leftTime);
         r.push(
           <Marker
             key={index++}
@@ -82,7 +83,7 @@ const Map = ({ mapLat, mapLng }) => {
         );
       }
       setResult(r);
-      // console.log(t);
+      // console.log(121);
     }, 1000); //1초씩 마커 변화
     setLoad(true);
 
