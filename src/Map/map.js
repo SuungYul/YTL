@@ -81,7 +81,7 @@ const Map = ({ mapLat, mapLng }) => {
         );
       }
       setResult(r);
-      console.log(5232)
+      console.log(7727)
     }, 2000); //1초씩 마커 변화
     setLoad(true);
 
