@@ -5,24 +5,18 @@ function CheckGreen(time, term, waitTime) {
   let greenMinutesStart = Number(time[0] + time[1]);
   let greenSecondStart = Number(time[3] + time[4]);
 
-  if (waitTime !== 0) {
-    greenSecondStart = greenSecondStart + waitTime;
-    if (greenSecondStart >= 60) {
-      greenMinutesStart += (greenSecondStart / 60).toFixed();
-      greenMinutesStart = greenMinutesStart % 3;
-      greenSecondStart = greenSecondStart % 60;
-    }
-  }
+  greenSecondStart = greenSecondStart + waitTime;
+  greenMinutesStart += (greenSecondStart / 60).toFixed();
+  greenMinutesStart = greenMinutesStart % 3;
+  greenSecondStart = greenSecondStart % 60;
 
   let greenMinutesEnd = greenMinutesStart;
   let greenSecondEnd = greenSecondStart + term;
   console.log(greenMinutesStart, greenMinutesEnd);
 
-  if (greenSecondEnd >= 60) {
-    greenMinutesEnd += (greenSecondEnd / 60).toFixed();
-    greenMinutesEnd = Number(greenMinutesEnd);
-    greenSecondEnd = greenSecondEnd % 60;
-  }
+  greenMinutesEnd += (greenSecondEnd / 60).toFixed();
+  greenMinutesEnd = Number(greenMinutesEnd);
+  greenSecondEnd = greenSecondEnd % 60;
 
   const date = new Date();
   let minutes = date.getMinutes();
