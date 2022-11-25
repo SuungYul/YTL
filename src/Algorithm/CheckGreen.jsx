@@ -18,10 +18,10 @@ function CheckGreen(time, term, waitTime) {
 
     let greenMinutesEnd = greenMinutesStart;
     let greenSecondEnd = greenSecondStart + term;
-    console.log(greenMinutesStart,greenMinutesEnd)
+    // console.log(greenMinutesStart,greenMinutesEnd)
 
     if (greenSecondEnd >= 60) {
-        greenMinutesEnd += (greenSecondEnd / 60).toFixed()
+        greenMinutesEnd = greenMinutesEnd + (greenSecondEnd / 60).toFixed()
         greenMinutesEnd = Number(greenMinutesEnd)
         greenSecondEnd = greenSecondEnd % 60;
     }
@@ -29,24 +29,25 @@ function CheckGreen(time, term, waitTime) {
     const date = new Date();
     let minutes = date.getMinutes();
     minutes = minutes % 3
-    const second = date.getSeconds();
+    let second = date.getSeconds();
     console.log(minutes,greenMinutesStart,greenMinutesEnd,second,greenSecondStart,greenSecondEnd)
+    
     if (
-        minutes >= greenMinutesStart &&
-        minutes <= greenMinutesEnd &&
-        second >= greenSecondStart &&
-        second <= greenSecondEnd
+        (minutes >= greenMinutesStart) &&
+        (minutes <= greenMinutesEnd) &&
+        (second >= greenSecondStart) &&
+        (second <= greenSecondEnd)
     ) {
-        const greenLeft =
+        let greenLeft =
             (greenMinutesEnd * 60) - (minutes * 60) + (greenSecondEnd - second);
-        // return `초록불, 초록불 남은 시간 ${greenLeft}초`
-        console.log("초록", greenLeft)
+        // // return `초록불, 초록불 남은 시간 ${greenLeft}초`
+        // console.log("초록", greenLeft)
         return new calculatedData("초록불", greenLeft);
     } else {
-        const leftSecond = second + (minutes * 60);
-        const greenTime = (greenMinutesStart * 60) + greenSecondStart;
+        let leftSecond = second + (minutes * 60);
+        let greenTime = (greenMinutesStart * 60) + greenSecondStart;
         let returnTime = 0;
-
+        console.log(leftSecond, greenTime)
         if (leftSecond < greenTime) {
             returnTime = greenTime - leftSecond;
         } else {
@@ -54,7 +55,7 @@ function CheckGreen(time, term, waitTime) {
         }
 
         // return `빨간불, 초록불까지 남은 시간 ${returnTime}초`
-        console.log("빨간", returnTime)
+        // console.log("빨간", returnTime)
         return new calculatedData("빨간불", returnTime);
     }
 }
