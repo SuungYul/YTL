@@ -1,20 +1,18 @@
 import calculatedData from "../database/calculatedData";
 
-
 // 현재 초록불인지 아닌지 확인해주는 함수
 function CheckGreen(time, term, waitTime) {
-    let greenMinutesStart = Number(time[0] + time[1]);
-    let greenSecondStart = Number(time[3] + time[4]);
-    
+  let greenMinutesStart = Number(time[0] + time[1]);
+  let greenSecondStart = Number(time[3] + time[4]);
 
-    if (waitTime !== 0) {
-        greenSecondStart = greenSecondStart + waitTime
-        if (greenSecondStart >= 60){
-            greenMinutesStart += (greenSecondStart / 60).toFixed()
-            greenMinutesStart = greenMinutesStart % 3
-            greenSecondStart = greenSecondStart % 60;
-        }
+  if (waitTime !== 0) {
+    greenSecondStart = greenSecondStart + waitTime;
+    if (greenSecondStart >= 60) {
+      greenMinutesStart += (greenSecondStart / 60).toFixed();
+      greenMinutesStart = greenMinutesStart % 3;
+      greenSecondStart = greenSecondStart % 60;
     }
+  }
 
     let greenMinutesEnd = greenMinutesStart;
     let greenSecondEnd = greenSecondStart + term;
@@ -58,6 +56,11 @@ function CheckGreen(time, term, waitTime) {
         // console.log("빨간", returnTime)
         return new calculatedData("빨간불", returnTime);
     }
+
+    // return `빨간불, 초록불까지 남은 시간 ${returnTime}초`
+    console.log("빨간", returnTime);
+    return new calculatedData("red", returnTime);
+  }
 }
 
 export default CheckGreen;

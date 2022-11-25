@@ -54,7 +54,7 @@ const Map = ({ mapLat, mapLng }) => {
     const interval = setInterval(() => {
       const r = [];
       for (let i = 0; i < t.length; i++) {
-        // console.log(mt[i], t[i], wt[i])
+        console.log(mt[i], t[i], wt[i]);
         const check = CheckGreen(mt[i], t[i], wt[i]);
         console.log(check.currentSign, check.leftTime)
         r.push(
@@ -65,25 +65,26 @@ const Map = ({ mapLat, mapLng }) => {
               lng: p[i]._long,
             }}
             icon={{
-              content: [
-                '<div class="cs_mapbridge">',
-                '<div class="map_group _map_group">',
-                '<div class="map_marker _marker tvhp tvhp_big">',
-                '<span class="ico _icon"></span>',
-                '<span class="shd">',
-                check.time,
-                "</span>",
+              content:
+                '<div class="cs_mapbridge" style="background-color:' +
+                check.currentSign +
+                ';">' +
+                '<div class="map_group _map_group">' +
+                '<div class="map_marker _marker tvhp tvhp_big">' +
+                '<span class="ico _icon"></span>' +
+                '<span class="shd">' +
+                check.leftTime +
+                "</span>" +
+                "</div>" +
+                "</div>" +
                 "</div>",
-                "</div>",
-                "</div>",
-              ].join(""),
             }}
           />
         );
       }
       setResult(r);
-      console.log(777)
-    }, 2000); //1초씩 마커 변화
+      console.log(t);
+    }, 1000); //1초씩 마커 변화
     setLoad(true);
 
     return () => {
