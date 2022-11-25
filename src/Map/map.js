@@ -54,9 +54,9 @@ const Map = ({ mapLat, mapLng }) => {
     const interval = setInterval(() => {
       const r = [];
       for (let i = 0; i < t.length; i++) {
-        console.log(mt[i], t[i], wt[i]);
+        // console.log(mt[i], t[i], wt[i]);
         const check = CheckGreen(mt[i], t[i], wt[i]);
-        console.log(check.currentSign, check.leftTime)
+        // console.log(check.currentSign, check.leftTime)
         r.push(
           <Marker
             key={index++}
