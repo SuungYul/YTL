@@ -28,7 +28,6 @@ function dfs(roadArray, crossArray, roadNameArray, crossNameArray, currentRoad, 
         lastRoute.push(doc)
       })
       lasttime = time
-      //여기서 전역변수인 lastRoute를 변경해도 마지막에 변경이 안됨 93번쨰를 보세요
     }
   }
 
@@ -41,10 +40,10 @@ function dfs(roadArray, crossArray, roadNameArray, crossNameArray, currentRoad, 
     rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name)
 
     let nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[0]
-      if (nextRoad === currentRoad) {
-        nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[1]
-      }
-    
+    if (nextRoad === currentRoad) {
+      nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[1]
+    }
+
     if (timeResult.now == '빨간불') {
       dfs(roadArray, crossArray, roadNameArray, crossNameArray, nextRoad, rememberRoute, endRoad, time + timeResult.time)
     } else {
@@ -66,7 +65,7 @@ function dfs(roadArray, crossArray, roadNameArray, crossNameArray, currentRoad, 
 }
 
 function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
-
+  lastRoute = []
   const db = firebase.firestore();
   let crossArray = []
   let crossNameArray = []
@@ -92,9 +91,9 @@ function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
     })
 
 
-   
+
     dfs(roadArray, crossArray, roadNameArray, crossNameArray, startPoint, rememberRoute, endPoint, 0)
-    console.log(lastRoute,lasttime)
+    console.log(lastRoute, lasttime)
     //여기서 lastRoute를 호출하면 안들어잇다고 나옴
   })
 
