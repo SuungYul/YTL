@@ -17,8 +17,15 @@ const Map = ({ mapLat, mapLng }) => {
     lat: mapLat,
     lng: mapLng,
   });
+  const [content, setContent] = useState();
+  const [time, setTime] = useState();
+  const [pos, setPos] = useState();
   useEffect(() => {
     index = 0;
+    setResult([]);
+    setTotalDB([]);
+    setTotalPos([]);
+    setTotalTime([]);
     const totalDBPromise = getDocs("crosswalk");
     totalDBPromise.then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -27,7 +34,7 @@ const Map = ({ mapLat, mapLng }) => {
         }
       });
     });
-
+    console.log(totalDB);
     totalDB.forEach((value) => {
       for (let i = 0; i < value.position.length; i++) {
         setTotalPos((prevPos) => [...prevPos, value.position[i]]);
@@ -38,30 +45,54 @@ const Map = ({ mapLat, mapLng }) => {
       // console.log(marker);
     });
     for (let i = 0; i < totalPos.length; i++, index++) {
-      const pos = {
+      console.log(totalPos.length);
+      setPos({
         lat: totalPos[i]._lat,
         lng: totalPos[i]._long,
-      };
-      const content = {
+      });
+      setTime(totalTime[i]);
+      console.log(time);
+      setContent({
         content: [
           '<div class="cs_mapbridge">',
           '<div class="map_group _map_group">',
           '<div class="map_marker _marker tvhp tvhp_big">',
           '<span class="ico _icon"></span>',
           '<span class="shd">',
-          totalTime[i],
+          time,
           "</span>",
           "</div>",
           "</div>",
           "</div>",
         ].join(""),
-      };
-      setResult((prevRes) => [
-        ...prevRes,
-        <Marker key={index} position={pos} icon={content} />,
-      ]);
+      });
+      setResult(
+        result.push(
+          <Marker
+            key={index}
+            position={{
+              lat: totalPos[i]._lat,
+              lng: totalPos[i]._long,
+            }}
+            icon={{
+              content: [
+                '<div class="cs_mapbridge">',
+                '<div class="map_group _map_group">',
+                '<div class="map_marker _marker tvhp tvhp_big">',
+                '<span class="ico _icon"></span>',
+                '<span class="shd">',
+                totalTime[i],
+                "</span>",
+                "</div>",
+                "</div>",
+                "</div>",
+              ].join(""),
+            }}
+          />
+        )
+      );
     }
-    console.log(totalPos);
+    console.log(result);
     console.log(totalTime);
     const interval = setInterval(() => {
       setTotalTime(
@@ -90,7 +121,7 @@ const Map = ({ mapLat, mapLng }) => {
           style={{ width: "100%", height: "100vh" }}
           center={center}
           //onCenterChanged={(center) => setCenter({ center })}
-          defaultZoom={16}
+          defaultZoom={17}
         >
           {result}
           <Marker
