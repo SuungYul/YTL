@@ -8,24 +8,34 @@ function CheckGreen(time, term, waitTime) {
   if (waitTime !== 0) {
     greenSecondStart = greenSecondStart + waitTime;
     if (greenSecondStart >= 60) {
-      greenMinutesStart += greenSecondStart / 60;
-      greenMinutesStart %= 3;
+      greenMinutesStart += (greenSecondStart / 60).toFixed();
+      greenMinutesStart = greenMinutesStart % 3;
       greenSecondStart = greenSecondStart % 60;
     }
   }
 
   let greenMinutesEnd = greenMinutesStart;
   let greenSecondEnd = greenSecondStart + term;
+  console.log(greenMinutesStart, greenMinutesEnd);
 
   if (greenSecondEnd >= 60) {
-    greenMinutesEnd += greenSecondEnd / 60;
+    greenMinutesEnd += (greenSecondEnd / 60).toFixed();
+    greenMinutesEnd = Number(greenMinutesEnd);
     greenSecondEnd = greenSecondEnd % 60;
   }
 
   const date = new Date();
-  const minutes = date.getMinutes() % 3;
+  let minutes = date.getMinutes();
+  minutes = minutes % 3;
   const second = date.getSeconds();
-
+  console.log(
+    minutes,
+    greenMinutesStart,
+    greenMinutesEnd,
+    second,
+    greenSecondStart,
+    greenSecondEnd
+  );
   if (
     minutes >= greenMinutesStart &&
     minutes <= greenMinutesEnd &&
@@ -35,7 +45,7 @@ function CheckGreen(time, term, waitTime) {
     const greenLeft =
       greenMinutesEnd * 60 - minutes * 60 + (greenSecondEnd - second);
     // return `초록불, 초록불 남은 시간 ${greenLeft}초`
-    // console.log("초록", greenLeft)
+    console.log("초록", greenLeft);
     return new calculatedData("green", greenLeft);
   } else {
     const leftSecond = second + minutes * 60;
@@ -49,7 +59,7 @@ function CheckGreen(time, term, waitTime) {
     }
 
     // return `빨간불, 초록불까지 남은 시간 ${returnTime}초`
-    // console.log("빨간", returnTime)
+    console.log("빨간", returnTime);
     return new calculatedData("red", returnTime);
   }
 }
