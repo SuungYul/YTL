@@ -19,8 +19,7 @@ function CheckGreen(time, term, waitTime) {
     // console.log(greenMinutesStart,greenMinutesEnd)
 
     if (greenSecondEnd >= 60) {
-        greenMinutesEnd += 1
-        console.log(typeof(greenMinutesEnd))
+        greenMinutesEnd += greenSecondEnd / 60;
         greenSecondEnd = greenSecondEnd % 60;
     }
 
