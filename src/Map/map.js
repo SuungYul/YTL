@@ -1,36 +1,28 @@
 import { getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
-import { NaverMap, Marker } from "react-naver-maps";
+import React, { useEffect, useState, useRef } from "react";
+import { NaverMap, Marker, Polyline } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
 import CheckGreen from "../Algorithm/CheckGreen";
 import FindFastRoute from "../Algorithm/FindFastRoute";
+import calculatedData from "../database/calculatedData";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
-import Modal from "./modal";
+import { PopUp } from "./modal";
 
 const Map = ({ mapLat, mapLng }) => {
-  //FindFastRoute("shortRoute", "road1", "road5");
-
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
   const YOUR_CLIENT_ID = "w4msaekuxw";
-  const [result, setResult] = useState([]);
-  const [modalIsOpen, setOpen] = useState(false);
 
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [result, setResult] = useState([]);
   const [isLoaded, setLoad] = useState(false);
+  const [data, setData] = useState(new calculatedData());
   const [center, setCenter] = useState({
     lat: mapLat,
     lng: mapLng,
   });
   let interval;
+
+  //FindFastRoute("shortRoute", "road1", "road5");
   useEffect(() => {
     const totalDBPromise = getDocs("crosswalk");
     let loaded = false;
@@ -64,6 +56,7 @@ const Map = ({ mapLat, mapLng }) => {
     let isGreen = []; // 지금 초록불인지 이것도 필요없을듯
     let mt = []; //measureTime 가져옴
     let wt = []; //waitingTime 가져옴
+    let name = [];
 
     totalDB.forEach((value) => {
       for (let i = 0; i < value.position.length; i++) {
@@ -74,12 +67,14 @@ const Map = ({ mapLat, mapLng }) => {
         isGreen.push(true);
         mt.push(value.measureTime);
         wt.push(value.waitingTime[i]);
+        name.push(value.name);
       }
     });
 
     const r = [];
     for (let i = 0; i < t.length; i++) {
       const check = CheckGreen(mt[i], t[i], wt[i]);
+      check.name = name[i];
       r.push(
         <Marker
           key={index++}
@@ -91,7 +86,8 @@ const Map = ({ mapLat, mapLng }) => {
             content:
               '<div class="cs_mapbridge" style="background-color:' +
               check.currentSign +
-              ';">' +
+              "; border-radius: 50%; width: 30px; height: 30px; text-align: center; justify-content: center; align-items: center; display: flex;" +
+              ' border: 1.5px solid black">' +
               '<div class="map_group _map_group">' +
               '<div class="map_marker _marker tvhp tvhp_big">' +
               '<span class="ico _icon"></span>' +
@@ -103,8 +99,8 @@ const Map = ({ mapLat, mapLng }) => {
               "</div>",
           }}
           onClick={() => {
-            // alert("click");
-            openModal();
+            setModalOpen(true);
+            setData(check);
           }}
         />
       );
@@ -132,10 +128,30 @@ const Map = ({ mapLat, mapLng }) => {
           <Marker
             position={{ lat: mapLat, lng: mapLng }}
             onClick={() => {
-              alert("여기는 입구입니다");
+              setModalOpen(true);
             }}
           />
-          {/* <Modal open={modalOpen} close={closeModal} header="Modal heading" /> */}
+          <Marker
+            position={{ lat: "37.230598234139315", lng: "127.18792639494912" }}
+            onClick={() => {
+              setModalOpen(true);
+            }}
+          />
+          <Polyline
+            path={[
+              { lat: mapLat, lng: mapLng },
+              { lat: "37.230598234139315", lng: "127.18792639494912" },
+            ]}
+            strokeColor={"#5347AA"}
+            strokeStyle={"longdash"}
+            strokeOpacity={0.5}
+            strokeWeight={5}
+          />
+          <PopUp
+            isModalOpen={isModalOpen}
+            setModalOpen={setModalOpen}
+            data={data}
+          ></PopUp>
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     </>

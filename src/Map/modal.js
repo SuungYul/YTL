@@ -1,29 +1,39 @@
-import React from "react";
+import Modal from "react-modal";
+import React, { useState } from "react";
 import "./modal.css";
 
-const Modal = (props) => {
-  // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-  const { open, close, header } = props;
-  console.log(open);
-  return (
-    // 모달이 열릴때 openModal 클래스가 생성된다.
-    <div className={open ? "openModal modal" : "modal"}>
-      {open ? (
-        <section>
-          <header>
-            {header}
-            <button className="close" onClick={close}></button>
-          </header>
-          <main>{props.children}</main>
-          <footer>
-            <button className="close" onClick={close}>
-              close
-            </button>
-          </footer>
-        </section>
-      ) : null}
-    </div>
-  );
+const customStyles = {
+  content: {
+    top: "35%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    height: "30%",
+    width: "20%",
+    transform: "translate(-40%, -10%)",
+  },
 };
 
-export default Modal;
+export function PopUp({ isModalOpen, setModalOpen, data }) {
+  return (
+    <>
+      <button onClick={() => setModalOpen(true)}>Modal Open</button>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        style={customStyles}
+      >
+        <div>
+          {data.name + "\n선택하신 횡단보도는 "}{" "}
+          {data.currentSign === "red" ? "빨간불" : "초록불"}{" "}
+          {", " + data.leftTime + "초 남았습니다."}
+        </div>
+        <div>
+          <button>출발</button>
+          <button>도착</button>
+        </div>
+      </Modal>
+    </>
+  );
+}
