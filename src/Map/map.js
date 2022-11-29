@@ -7,12 +7,14 @@ import FindFastRoute from "../Algorithm/FindFastRoute";
 import calculatedData from "../database/calculatedData";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
-import { PopUp } from "./modal";
+import { FindWay, PopUp } from "./modal";
+import "./map.css";
 
 const Map = ({ mapLat, mapLng }) => {
   const YOUR_CLIENT_ID = "w4msaekuxw";
 
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isFindOpen, setFindOpen] = useState(false);
   const [result, setResult] = useState([]);
   const [isLoaded, setLoad] = useState(false);
   const [data, setData] = useState(new calculatedData());
@@ -111,50 +113,71 @@ const Map = ({ mapLat, mapLng }) => {
 
   // console.log(result);
   return isLoaded ? (
-    <>
+    <div className="naverMap">
       <RenderAfterNavermapsLoaded
         ncpClientId={YOUR_CLIENT_ID}
         error={<p>Maps Load Error</p>}
         loading={<p>Maps Loading...</p>}
       >
-        <NaverMap
-          id="react-naver-maps"
-          style={{ width: "100%", height: "100vh" }}
-          center={center}
-          //onCenterChanged={(center) => setCenter({ center })}
-          defaultZoom={17}
-        >
-          {result}
-          <Marker
-            position={{ lat: mapLat, lng: mapLng }}
+        <div className="map">
+          <div className="info">YTL Project</div>
+          <button
+            className="findWayBtn"
             onClick={() => {
-              setModalOpen(true);
+              if (!isModalOpen) {
+                // 팝업창이 띄워졌으면 클릭 안되게
+                console.log("hi");
+                setFindOpen(true);
+              }
             }}
-          />
-          <Marker
-            position={{ lat: "37.230598234139315", lng: "127.18792639494912" }}
-            onClick={() => {
-              setModalOpen(true);
-            }}
-          />
-          <Polyline
-            path={[
-              { lat: mapLat, lng: mapLng },
-              { lat: "37.230598234139315", lng: "127.18792639494912" },
-            ]}
-            strokeColor={"#5347AA"}
-            strokeStyle={"longdash"}
-            strokeOpacity={0.5}
-            strokeWeight={5}
-          />
-          <PopUp
-            isModalOpen={isModalOpen}
-            setModalOpen={setModalOpen}
-            data={data}
-          ></PopUp>
-        </NaverMap>
+          >
+            <p className="direction">↱</p>
+            <p className="findWay">길찾기</p>
+          </button>
+          <NaverMap
+            id="react-naver-maps"
+            style={{ width: "100%", height: "100vh" }}
+            center={center}
+            //onCenterChanged={(center) => setCenter({ center })}
+            defaultZoom={17}
+            zIndex={0}
+          >
+            {result}
+            <Marker
+              position={{ lat: mapLat, lng: mapLng }}
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            />
+            <Marker
+              position={{
+                lat: "37.230598234139315",
+                lng: "127.18792639494912",
+              }}
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            />
+            <Polyline
+              path={[
+                { lat: mapLat, lng: mapLng },
+                { lat: "37.230598234139315", lng: "127.18792639494912" },
+              ]}
+              strokeColor={"#5347AA"}
+              strokeStyle={"longdash"}
+              strokeOpacity={0.5}
+              strokeWeight={5}
+            />
+            <PopUp
+              isModalOpen={isModalOpen}
+              setModalOpen={setModalOpen}
+              data={data}
+            ></PopUp>
+            <FindWay isFindOpen={isFindOpen} setFindOpen={setFindOpen} />;
+          </NaverMap>
+        </div>
       </RenderAfterNavermapsLoaded>
-    </>
+    </div>
   ) : (
     "Loading...."
   );
