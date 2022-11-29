@@ -2,6 +2,8 @@ import { Crosswalk } from "../database/data";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import CheckGreen from "./CheckGreen";
+import { getDocs } from "../database/firebase";
+import { useEffect } from "react";
 
 let lasttime = 10000000;
 let lastRoute = [];
@@ -26,6 +28,7 @@ function dfs(
   rememberRoute.push(currentRoad);
 
   if (currentRoad == endRoad) {
+    // console.log(rememberRoute, lasttime, time)
     if (lasttime > time) {
       // lastRoute = JSON.parse(JSON.stringify(rememberRoute));
       // lastRoute = _.cloneDeep(objects);
@@ -43,8 +46,9 @@ function dfs(
   for (let i = 0; i < roadArray[currentRoad].connect.length; i++) {
     const timeResult = CheckGreen(
       crossArray[roadArray[currentRoad].connect[i]].measureTime,
-      crossArray[roadArray[currentRoad].connect[i]].greenTime
-    );
+      crossArray[roadArray[currentRoad].connect[i]].greenTime,
+      0
+    )
     const walkTIme =
       crossArray[roadArray[currentRoad].connect[i]].greenTime - 7;
     rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
@@ -54,7 +58,7 @@ function dfs(
       nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[1];
     }
 
-    if (timeResult.now == "빨간불") {
+    if (timeResult.currentSign == "빨간불") {
       dfs(
         roadArray,
         crossArray,
@@ -63,10 +67,10 @@ function dfs(
         nextRoad,
         rememberRoute,
         endRoad,
-        time + timeResult.time
+        time + timeResult.leftTime
       );
     } else {
-      if (timeResult.time < walkTIme) {
+      if (timeResult.leftTime < walkTIme) {
         dfs(
           roadArray,
           crossArray,
@@ -76,9 +80,9 @@ function dfs(
           rememberRoute,
           endRoad,
           time +
-            3 -
-            crossArray[roadArray[currentRoad].connect[i]].greenTime +
-            timeResult.time
+          3 -
+          crossArray[roadArray[currentRoad].connect[i]].greenTime +
+          timeResult.leftTime
         );
       } else {
         dfs(
@@ -89,7 +93,7 @@ function dfs(
           nextRoad,
           rememberRoute,
           endRoad,
-          time + timeResult.time
+          time + timeResult.leftTime
         );
       }
     }
@@ -101,13 +105,37 @@ function dfs(
   roadArray[currentRoad].visit = false;
 }
 
-function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
+function FindFastRoute(total, startPoint, endPoint) {
   const db = firebase.firestore();
   let crossArray = [];
   let crossNameArray = [];
   let roadArray = [];
   let roadNameArray = [];
   let rememberRoute = [];
+
+  const totalDB = [];
+  const totalDBPromise = getDocs("shortRoute");
+  let loaded = false;
+  totalDBPromise.then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      if (!totalDB.includes(doc.data())) {
+        totalDB.push(doc.data());
+      }
+      loaded = true;
+    });
+  });
+
+  
+
+  totalDB.forEach((doc) => {
+    console.log('>>>>>',doc)
+    crossArray[doc.name] = doc.data();
+    crossNameArray.push(doc.data().name);
+    console.log(totalDB[0])
+  })
+
+
+  // console.log(crossArray)
 
   db.collection("shortRoute")
     .get()
@@ -136,8 +164,15 @@ function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
         endPoint,
         0
       );
-      console.log(lastRoute, lasttime);
+
       //여기서 lastRoute를 호출하면 안들어잇다고 나옴
+
+      console.log(lastRoute, lasttime)
+
+  
     });
+
+
+
 }
 export default FindFastRoute;
