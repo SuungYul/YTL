@@ -1,18 +1,29 @@
 import { getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import ReactModal from "react-modal";
 import { NaverMap, Marker } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
 import CheckGreen from "../Algorithm/CheckGreen";
 import FindFastRoute from "../Algorithm/FindFastRoute";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
+import Modal from "./modal";
 
 const Map = ({ mapLat, mapLng }) => {
   //FindFastRoute("shortRoute", "road1", "road5");
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [result, setResult] = useState([]);
-  // const [totalDB, setTotalDB] = useState([]);
+  const [modalIsOpen, setOpen] = useState(false);
 
   const [isLoaded, setLoad] = useState(false);
   const [center, setCenter] = useState({
@@ -45,6 +56,63 @@ const Map = ({ mapLat, mapLng }) => {
     };
   }, []);
 
+  function displayMarker(totalDB) {
+    let index = 0;
+    let p = []; // db doc안에 모든 position 좌표
+    let t = []; // db doc안에 모든 duration 시간 근데 얘는 변화가 될수도?
+    let time = []; // 일단 임시로 두개 받음
+    let isGreen = []; // 지금 초록불인지 이것도 필요없을듯
+    let mt = []; //measureTime 가져옴
+    let wt = []; //waitingTime 가져옴
+
+    totalDB.forEach((value) => {
+      for (let i = 0; i < value.position.length; i++) {
+        p.push(value.position[i]);
+
+        t.push(value.duration[i]);
+        time.push(value.duration[i]);
+        isGreen.push(true);
+        mt.push(value.measureTime);
+        wt.push(value.waitingTime[i]);
+      }
+    });
+
+    const r = [];
+    for (let i = 0; i < t.length; i++) {
+      const check = CheckGreen(mt[i], t[i], wt[i]);
+      r.push(
+        <Marker
+          key={index++}
+          position={{
+            lat: p[i]._lat,
+            lng: p[i]._long,
+          }}
+          icon={{
+            content:
+              '<div class="cs_mapbridge" style="background-color:' +
+              check.currentSign +
+              ';">' +
+              '<div class="map_group _map_group">' +
+              '<div class="map_marker _marker tvhp tvhp_big">' +
+              '<span class="ico _icon"></span>' +
+              '<span class="shd">' +
+              check.leftTime +
+              "</span>" +
+              "</div>" +
+              "</div>" +
+              "</div>",
+          }}
+          onClick={() => {
+            // alert("click");
+            openModal();
+          }}
+        />
+      );
+    }
+
+    return r;
+  }
+
   // console.log(result);
   return isLoaded ? (
     <>
@@ -67,6 +135,7 @@ const Map = ({ mapLat, mapLng }) => {
               alert("여기는 입구입니다");
             }}
           />
+          {/* <Modal open={modalOpen} close={closeModal} header="Modal heading" /> */}
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     </>
@@ -76,59 +145,3 @@ const Map = ({ mapLat, mapLng }) => {
 };
 
 export default Map;
-
-function displayMarker(totalDB) {
-  let index = 0;
-  let p = []; // db doc안에 모든 position 좌표
-  let t = []; // db doc안에 모든 duration 시간 근데 얘는 변화가 될수도?
-  let time = []; // 일단 임시로 두개 받음
-  let isGreen = []; // 지금 초록불인지 이것도 필요없을듯
-  let mt = []; //measureTime 가져옴
-  let wt = []; //waitingTime 가져옴
-
-  totalDB.forEach((value) => {
-    for (let i = 0; i < value.position.length; i++) {
-      p.push(value.position[i]);
-
-      t.push(value.duration[i]);
-      time.push(value.duration[i]);
-      isGreen.push(true);
-      mt.push(value.measureTime);
-      wt.push(value.waitingTime[i]);
-    }
-  });
-
-  const r = [];
-  for (let i = 0; i < t.length; i++) {
-    const check = CheckGreen(mt[i], t[i], wt[i]);
-    r.push(
-      <Marker
-        key={index++}
-        position={{
-          lat: p[i]._lat,
-          lng: p[i]._long,
-        }}
-        icon={{
-          content:
-            '<div class="cs_mapbridge" style="background-color:' +
-            check.currentSign +
-            ';">' +
-            '<div class="map_group _map_group">' +
-            '<div class="map_marker _marker tvhp tvhp_big">' +
-            '<span class="ico _icon"></span>' +
-            '<span class="shd">' +
-            check.leftTime +
-            "</span>" +
-            "</div>" +
-            "</div>" +
-            "</div>",
-        }}
-        onClick={() => {
-          alert("click");
-        }}
-      />
-    );
-  }
-
-  return r;
-}
