@@ -4,6 +4,7 @@ import "firebase/firestore";
 import CheckGreen from "./CheckGreen";
 import { getDocs } from "../database/firebase";
 import { useEffect } from "react";
+import AlgorithmData from "../database/AlgorithmData";
 
 let lasttime = 10000000;
 let lastRoute = [];
@@ -11,8 +12,6 @@ let lastRoute = [];
 function dfs(
   roadArray,
   crossArray,
-  roadNameArray,
-  crossNameArray,
   currentRoad,
   rememberRoute,
   endRoad,
@@ -30,8 +29,6 @@ function dfs(
   if (currentRoad == endRoad) {
     // console.log(rememberRoute, lasttime, time)
     if (lasttime > time) {
-      // lastRoute = JSON.parse(JSON.stringify(rememberRoute));
-      // lastRoute = _.cloneDeep(objects);
       lastRoute = [];
       rememberRoute.forEach((doc) => {
         lastRoute.push(doc);
@@ -62,8 +59,6 @@ function dfs(
       dfs(
         roadArray,
         crossArray,
-        roadNameArray,
-        crossNameArray,
         nextRoad,
         rememberRoute,
         endRoad,
@@ -74,8 +69,6 @@ function dfs(
         dfs(
           roadArray,
           crossArray,
-          roadNameArray,
-          crossNameArray,
           nextRoad,
           rememberRoute,
           endRoad,
@@ -88,8 +81,6 @@ function dfs(
         dfs(
           roadArray,
           crossArray,
-          roadNameArray,
-          crossNameArray,
           nextRoad,
           rememberRoute,
           endRoad,
@@ -105,60 +96,59 @@ function dfs(
   roadArray[currentRoad].visit = false;
 }
 
-function FindFastRoute(total, startPoint, endPoint) {
-  const db = firebase.firestore();
-  let crossArray = [];
-  let crossNameArray = [];
-  let roadArray = [];
-  let roadNameArray = [];
+function FindFastRoute(startPoint, endPoint, roadArray, crossArray) {
+  // const db = firebase.firestore();
+  // let crossArray = [];
+  // let crossNameArray = [];
+  // let roadArray = [];
+  // let roadNameArray = [];
   let rememberRoute = [];
-
-  const totalDB = [];
-  const totalDBPromise = getDocs("shortRoute");
-  let loaded = false;
-  totalDBPromise.then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      if (!totalDB.includes(doc.data())) {
-        totalDB.push(doc.data());
-      }
-      loaded = true;
-    });
-  });
+  // const totalDB = [];
+  // const totalDBPromise = getDocs("shortRoute");
+  // let loaded = false;
+  // totalDBPromise.then((querySnapshot) => {
+  //   querySnapshot.forEach((doc) => {
+  //     if (!totalDB.includes(doc.data())) {
+  //       totalDB.push(doc.data());
+  //     }
+  //     loaded = true;
+  //   });
+  // });
 
   
 
-  totalDB.forEach((doc) => {
-    console.log('>>>>>',doc)
-    crossArray[doc.name] = doc.data();
-    crossNameArray.push(doc.data().name);
-    console.log(totalDB[0])
-  })
+  // totalDB.forEach((doc) => {
+  //   console.log('>>>>>',doc)
+  //   crossArray[doc.name] = doc.data();
+  //   crossNameArray.push(doc.data().name);
+  //   console.log(totalDB[0])
+  // })
 
 
-  // console.log(crossArray)
+  // // console.log(crossArray)
 
-  db.collection("shortRoute")
-    .get()
-    .then((결과) => {
-      결과.forEach((doc) => {
-        crossArray[doc.data().name] = doc.data();
-        crossNameArray.push(doc.data().name);
-      });
-    });
+  // db.collection("shortRoute")
+  //   .get()
+  //   .then((결과) => {
+  //     결과.forEach((doc) => {
+  //       crossArray[doc.data().name] = doc.data();
+  //       crossNameArray.push(doc.data().name);
+  //     });
+  //   });
 
-  db.collection("Road")
-    .get()
-    .then((결과2) => {
-      결과2.forEach((doc) => {
-        roadArray[doc.data().name] = doc.data();
-        roadNameArray.push(doc.data().name);
-      });
+  // db.collection("Road")
+  //   .get()
+  //   .then((결과2) => {
+  //     결과2.forEach((doc) => {
+  //       roadArray[doc.data().name] = doc.data();
+  //       roadNameArray.push(doc.data().name);
+  //     });
+
+  //     console.log(roadArray[roadNameArray[0]])
 
       dfs(
         roadArray,
         crossArray,
-        roadNameArray,
-        crossNameArray,
         startPoint,
         rememberRoute,
         endPoint,
@@ -167,10 +157,11 @@ function FindFastRoute(total, startPoint, endPoint) {
 
       //여기서 lastRoute를 호출하면 안들어잇다고 나옴
 
-      console.log(lastRoute, lasttime)
+       return new AlgorithmData(lastRoute, lasttime)
+       
 
   
-    });
+    // });
 
 
 

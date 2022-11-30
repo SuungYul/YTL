@@ -7,7 +7,7 @@ const App = () => {
   let mapLat = "37.23229";
   let mapLng = "127.188205";
   const [isLoad, setLoad] = useState(false);
-  FindFastRoute('q','road1','road5')
+  
   useEffect(() => {
     setLoad(true);
   });
