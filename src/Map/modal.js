@@ -70,6 +70,8 @@ export function FindWay({ isFindOpen, setFindOpen }) {
       >
         <div>
           <div>
+            <span>출발 내용</span>
+            <button onClick={() => {}}>출발</button>
             <span>{startPoint}</span>
             <button onClick={()=>{
               setstartPoint(pickPoint())

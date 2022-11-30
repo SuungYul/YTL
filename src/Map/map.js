@@ -37,6 +37,11 @@ const Map = ({ mapLat, mapLng }) => {
   useEffect(() => {
 
     const totalDBPromise = getDocs("crosswalk");
+    const roadPromise = getDocs("Road");
+    const shortRoutePromise = getDocs("shortRoute");
+    const tP = [];
+    tP.push(shortRoutePromise, roadPromise);
+    FindFastRoute(tP, "road1", "road5");
     let loaded = false;
     const totalDB = [];
     totalDBPromise.then((querySnapshot) => {
