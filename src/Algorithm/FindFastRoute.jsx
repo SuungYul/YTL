@@ -116,7 +116,7 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
     });
   });
 
-  console.log(crossNameArray[0]);
+  console.log(crossNameArray);
   await crossWalkCollection[1].then((결과2) => {
     결과2.forEach((doc) => {
       roadArray[doc.data().name] = doc.data();

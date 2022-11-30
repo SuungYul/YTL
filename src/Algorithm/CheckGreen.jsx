@@ -39,11 +39,16 @@ function CheckGreen(time, term, waitTime) {
   let greenTimeStart = greenMinutesStart * 60 + greenSecondStart;
   let greenTimeEnd = greenMinutesEnd * 60 + greenSecondEnd;
 
+  let data = new calculatedData();
+  data.minute = greenMinutesStart;
+  data.second = greenSecondStart;
+
   if (greenTimeStart <= leftSecond && leftSecond <= greenTimeEnd) {
     // console.log(leftSecond, greenTimeStart, greenTimeEnd);
     let greenLeft = greenTimeEnd - leftSecond;
     // // return `초록불, 초록불 남은 시간 ${greenLeft}초`
-    return new calculatedData("green", greenLeft);
+    data.currentSign = "green";
+    data.leftTime = greenLeft;
   } else {
     let returnTime = 0;
 
@@ -54,8 +59,10 @@ function CheckGreen(time, term, waitTime) {
     }
 
     // return `빨간불, 초록불까지 남은 시간 ${returnTime}초`
-    return new calculatedData("red", returnTime);
+    data.currentSign = "red";
+    data.leftTime = returnTime;
   }
+  return data;
 }
 
 export default CheckGreen;
