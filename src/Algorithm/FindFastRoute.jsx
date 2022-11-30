@@ -96,21 +96,12 @@ function dfs(
   roadArray[currentRoad].visit = false;
 }
 
-<<<<<<< HEAD
-function FindFastRoute(startPoint, endPoint, roadArray, crossArray) {
-  // const db = firebase.firestore();
-  // let crossArray = [];
-  // let crossNameArray = [];
-  // let roadArray = [];
-  // let roadNameArray = [];
-=======
 async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   //const db = firebase.firestore();
   let crossArray = [];
   let crossNameArray = [];
   let roadArray = [];
   let roadNameArray = [];
->>>>>>> 6ce050321366b9bec5325ca31042b99c6cb3a75a
   let rememberRoute = [];
   // const totalDB = [];
   // const totalDBPromise = getDocs("shortRoute");
@@ -124,58 +115,6 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   //   });
   // });
 
-<<<<<<< HEAD
-  
-
-  // totalDB.forEach((doc) => {
-  //   console.log('>>>>>',doc)
-  //   crossArray[doc.name] = doc.data();
-  //   crossNameArray.push(doc.data().name);
-  //   console.log(totalDB[0])
-  // })
-
-
-  // // console.log(crossArray)
-
-  // db.collection("shortRoute")
-  //   .get()
-  //   .then((결과) => {
-  //     결과.forEach((doc) => {
-  //       crossArray[doc.data().name] = doc.data();
-  //       crossNameArray.push(doc.data().name);
-  //     });
-  //   });
-
-  // db.collection("Road")
-  //   .get()
-  //   .then((결과2) => {
-  //     결과2.forEach((doc) => {
-  //       roadArray[doc.data().name] = doc.data();
-  //       roadNameArray.push(doc.data().name);
-  //     });
-
-  //     console.log(roadArray[roadNameArray[0]])
-
-      dfs(
-        roadArray,
-        crossArray,
-        startPoint,
-        rememberRoute,
-        endPoint,
-        0
-      );
-
-      //여기서 lastRoute를 호출하면 안들어잇다고 나옴
-
-       return new AlgorithmData(lastRoute, lasttime)
-       
-
-  
-    // });
-
-
-
-=======
   await crossWalkCollection[0].then((결과) => {
     결과.forEach((doc) => {
       crossArray[doc.data().name] = doc.data();
@@ -183,26 +122,24 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
     });
   });
 
-  console.log(crossNameArray[0]);
+  // console.log(crossNameArray[0]);
   await crossWalkCollection[1].then((결과2) => {
     결과2.forEach((doc) => {
       roadArray[doc.data().name] = doc.data();
       roadNameArray.push(doc.data().name);
     });
-
-    dfs(
-      roadArray,
-      crossArray,
-      roadNameArray,
-      crossNameArray,
-      startPoint,
-      rememberRoute,
-      endPoint,
-      0
-    );
-    console.log(lastRoute, lasttime);
     //여기서 lastRoute를 호출하면 안들어잇다고 나옴
   });
->>>>>>> 6ce050321366b9bec5325ca31042b99c6cb3a75a
+
+  dfs(
+    roadArray,
+    crossArray,
+    startPoint,
+    rememberRoute,
+    endPoint,
+    0
+  );
+  // console.log(lastRoute, lasttime)
+  return new AlgorithmData(lastRoute, lasttime);
 }
 export default FindFastRoute;

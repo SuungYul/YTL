@@ -12,11 +12,10 @@ import "./map.css";
 import AlgorithmData from "../database/AlgorithmData";
 
 
-const shortRoute = []
-const shortTime = 0
-
-const roadArray = []
-const routeArray = []
+let shortRoute = []
+let shortTime = 0
+const routedata = 0
+const tp = [];
 
 
 const Map = ({ mapLat, mapLng }) => {
@@ -35,13 +34,14 @@ const Map = ({ mapLat, mapLng }) => {
 
   //FindFastRoute("shortRoute", "road1", "road5");
   useEffect(() => {
-
     const totalDBPromise = getDocs("crosswalk");
     const roadPromise = getDocs("Road");
     const shortRoutePromise = getDocs("shortRoute");
-    const tP = [];
-    tP.push(shortRoutePromise, roadPromise);
-    FindFastRoute(tP, "road1", "road5");
+
+    tp.push(shortRoutePromise,roadPromise)
+
+
+
     let loaded = false;
     const totalDB = [];
     totalDBPromise.then((querySnapshot) => {
@@ -57,89 +57,10 @@ const Map = ({ mapLat, mapLng }) => {
 
 
 
-    const totalDBPromise2 = getDocs("Road");
-    let loaded2 = false;
-    const totalDB2 = [];
-
-    let totalNameDB2 = []
-    totalDBPromise2.then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        if (!totalDB2.includes(doc.data())) {
-          totalDB2[doc.data().name] = doc.data()
-        }
-        loaded2 = true;
-      });
-
-    });
-
-
-
-    // console.log(typeof(totalNameDB2))
-
-    const totalDBPromise3 = getDocs("shortRoute");
-    let loaded3 = false;
-    const totalDB3 = [];
-    let totalNameDB3 = []
-    totalDBPromise3.then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        if (!totalDB3.includes(doc.data())) {
-          totalDB3[doc.data().name] = doc.data()
-        }
-        loaded3 = true;
-      });
-      // console.log(totalDB2["road1"])
-      // const s = FindFastRoute('road1','road5',totalDB2,totalDB3)
-    });
-
-
-    // console.log(roadTotalDB[totalNameDB2[0]])
-    // console.log(crossTotalDB[0])
-
-    console.log(totalDB2)
-    // console.log(totalDB2[0])
-
-
     interval = setInterval(() => {
-      if (loaded) setResult(displayMarker(totalDB,totalDB2,totalDB3));
+      if (loaded) setResult(displayMarker(totalDB));
     }, 1000);
   }, []);
-
-  // const [nav, setNav] = useState();
-  // let road = []
-  // useEffect(() => {
-    
-  //   const fetchData = async () => {
-  //     try {
-  //       const result = await getDocs("Road")
-  //       setNav(result);
-  //       result.forEach((data)=>{
-  //         // road[data._delegate._document.data.value.mapValue.fields.name.stringValue] = data._delegate._document.data.value.mapValue.fields
-  //         // //console.log(road)
-  //         road[data._delegate._document.data.value.mapValue.fields.name.stringValue] = 
-  //         new AlgorithmData(data._delegate._document.data.value.mapValue.fields.connect.arrayValue,
-  //           data._delegate._document.data.value.mapValue.fields.name.stringValue,
-  //           data._delegate._document.data.value.mapValue.fields.time.integerValue,
-  //           data._delegate._document.data.value.mapValue.fields.visit.booleanValue)
-  //       })
-  //       setNav(road)
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  //   console.log(nav)
-  // }, []);
-  
-
-  // console.log(nav)
-  // for( let i; i< nav.length; i++){
-  //   road.push(nav[i]._delegate.document.data.value.mapvalue.fields)
-  // }
-  // nav.forEach((data)=>[
-  //   road.push(data._delegate.document.data.value.mapvalue.fields)
-  // ])
-
 
 
   useEffect(() => {
@@ -154,7 +75,7 @@ const Map = ({ mapLat, mapLng }) => {
 
 
 
-  function displayMarker(totalDB,totalDB2,totalDB3) {
+  function displayMarker(totalDB) {
     let index = 0;
     let p = []; // db doc안에 모든 position 좌표
     let t = []; // db doc안에 모든 duration 시간 근데 얘는 변화가 될수도?
@@ -165,13 +86,13 @@ const Map = ({ mapLat, mapLng }) => {
     let name = [];
 
 
-    totalDB2.forEach((data)=>[
-      roadArray[data.name] = data
-    ])
-    totalDB3.forEach((data)=>[
-      routeArray[data.name] = data
-    ])
-    console.log(roadArray)
+    // totalDB2.forEach((data)=>[
+    //   roadArray[data.name] = data
+    // ])
+    // totalDB3.forEach((data)=>[
+    //   routeArray[data.name] = data
+    // ])
+    // console.log(roadArray)
 
     // totalDB[0].forEach((data)=>{
     //   shortRoute.push()
@@ -240,13 +161,17 @@ const Map = ({ mapLat, mapLng }) => {
           <div className="info">YTL Project</div>
           <button
             className="findWayBtn"
-            onClick={() => {
+            onClick={async () => {
               // if (!isModalOpen) {
               //   // 팝업창이 띄워졌으면 클릭 안되게
               //   setFindOpen(true);
               // }
               // FindRoute()
-              console.log(shortRoute)
+              await FindFastRoute(tp,"road1","road5").then((resolvedData) => 
+                shortRoute = resolvedData
+              );
+              shortTime = shortRoute.time
+              shortRoute = shortRoute.visit
             }}
           >
             <p className="direction">↱</p>
