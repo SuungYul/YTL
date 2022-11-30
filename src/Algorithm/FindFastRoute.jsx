@@ -101,43 +101,40 @@ function dfs(
   roadArray[currentRoad].visit = false;
 }
 
-function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
-  const db = firebase.firestore();
+async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
+  //const db = firebase.firestore();
   let crossArray = [];
   let crossNameArray = [];
   let roadArray = [];
   let roadNameArray = [];
   let rememberRoute = [];
 
-  db.collection("shortRoute")
-    .get()
-    .then((결과) => {
-      결과.forEach((doc) => {
-        crossArray[doc.data().name] = doc.data();
-        crossNameArray.push(doc.data().name);
-      });
+  await crossWalkCollection[0].then((결과) => {
+    결과.forEach((doc) => {
+      crossArray[doc.data().name] = doc.data();
+      crossNameArray.push(doc.data().name);
+    });
+  });
+
+  console.log(crossNameArray[0]);
+  await crossWalkCollection[1].then((결과2) => {
+    결과2.forEach((doc) => {
+      roadArray[doc.data().name] = doc.data();
+      roadNameArray.push(doc.data().name);
     });
 
-  db.collection("Road")
-    .get()
-    .then((결과2) => {
-      결과2.forEach((doc) => {
-        roadArray[doc.data().name] = doc.data();
-        roadNameArray.push(doc.data().name);
-      });
-
-      dfs(
-        roadArray,
-        crossArray,
-        roadNameArray,
-        crossNameArray,
-        startPoint,
-        rememberRoute,
-        endPoint,
-        0
-      );
-      console.log(lastRoute, lasttime);
-      //여기서 lastRoute를 호출하면 안들어잇다고 나옴
-    });
+    dfs(
+      roadArray,
+      crossArray,
+      roadNameArray,
+      crossNameArray,
+      startPoint,
+      rememberRoute,
+      endPoint,
+      0
+    );
+    console.log(lastRoute, lasttime);
+    //여기서 lastRoute를 호출하면 안들어잇다고 나옴
+  });
 }
 export default FindFastRoute;

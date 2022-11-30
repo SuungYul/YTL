@@ -64,7 +64,7 @@ export function FindWay({ isFindOpen, setFindOpen }) {
         <div>
           <div>
             <span>출발 내용</span>
-            <button>출발</button>
+            <button onClick={() => {}}>출발</button>
           </div>
 
           <div>
