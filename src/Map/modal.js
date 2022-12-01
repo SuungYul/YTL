@@ -98,7 +98,10 @@ function drawTable(isModalOpen, data) {
       i %= 60;
       hourCount++;
       hour++;
-      if (hour > 24) date++;
+      if (hour > 24) {
+        date++;
+        hour %= 24;
+      }
     }
     if (i % 3 === minute) {
       result.push(
