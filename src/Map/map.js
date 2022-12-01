@@ -162,12 +162,12 @@ const Map = ({ mapLat, mapLng }) => {
           <button
             className="findWayBtn"
             onClick={async () => {
-              // if (!isModalOpen) {
-              //   // 팝업창이 띄워졌으면 클릭 안되게
-              //   setFindOpen(true);
-              // }
-              // FindRoute()
-              await FindFastRoute(tp,"road1","road5").then((resolvedData) => 
+              if (!isModalOpen) {
+                // 팝업창이 띄워졌으면 클릭 안되게
+                setFindOpen(true);
+              }
+
+              await FindFastRoute(tp,"LeftRoad1","MjuStation").then((resolvedData) => 
                 shortRoute = resolvedData
               );
               shortTime = shortRoute.time

@@ -41,6 +41,19 @@ function dfs(
   //현재 길과 이어진 횡단보도를 계산해서 그 시간을 더하고 그 횡단보도에서 갈수 잇는
   //길로 이동하여 함수를 준다
   for (let i = 0; i < roadArray[currentRoad].connect.length; i++) {
+
+    if(roadArray[currentRoad].connect[i].visit !== undefined){
+      dfs(
+        roadArray,
+        crossArray,
+        roadArray[currentRoad].connect[i],
+        rememberRoute,
+        endRoad,
+        time
+      );
+      continue
+    }//여기 수정함
+
     const timeResult = CheckGreen(
       crossArray[roadArray[currentRoad].connect[i]].measureTime,
       crossArray[roadArray[currentRoad].connect[i]].greenTime,
@@ -139,7 +152,7 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
     endPoint,
     0
   );
-  // console.log(lastRoute, lasttime)
+  console.log(lastRoute, lasttime)
   return new AlgorithmData(lastRoute, lasttime);
 }
 export default FindFastRoute;
