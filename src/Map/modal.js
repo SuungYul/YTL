@@ -53,7 +53,14 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
   );
 }
 
+function  pickPoint(){
+  return "road1"
+}
+
 export function FindWay({ isFindOpen, setFindOpen }) {
+  const [startPoint, setstartPoint] = useState("출발 지점");
+  const [endPoint, setendPoint] = useState("도착 지점");
+
   return (
     <>
       <Modal
@@ -65,11 +72,17 @@ export function FindWay({ isFindOpen, setFindOpen }) {
           <div>
             <span>출발 내용</span>
             <button onClick={() => {}}>출발</button>
+            <span>{startPoint}</span>
+            <button onClick={()=>{
+              setstartPoint(pickPoint())
+              }}>출발</button>
           </div>
 
           <div>
-            <span>도착 내용</span>
-            <button>도착</button>
+            <span>{endPoint}</span>
+            <button onClick={()=>{
+              setendPoint(pickPoint())
+              }}>도착</button>
           </div>
         </div>
       </Modal>

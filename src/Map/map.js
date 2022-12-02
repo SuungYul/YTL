@@ -1,6 +1,6 @@
 import { getDoc } from "firebase/firestore";
-import React, { useEffect, useState, useRef } from "react";
-import { NaverMap, Marker, Polyline } from "react-naver-maps";
+import React, { useEffect, useState } from "react";
+import { NaverMap, Marker, Polyline, Rectangle } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
 import CheckGreen from "../Algorithm/CheckGreen";
 import FindFastRoute from "../Algorithm/FindFastRoute";
@@ -9,6 +9,12 @@ import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
 import { FindWay, PopUp } from "./modal";
 import "./map.css";
+import AlgorithmData from "../database/AlgorithmData";
+
+let shortRoute = [];
+let shortTime = 0;
+const routedata = 0;
+const tp = [];
 
 const Map = ({ mapLat, mapLng }) => {
   const YOUR_CLIENT_ID = "w4msaekuxw";
@@ -30,9 +36,9 @@ const Map = ({ mapLat, mapLng }) => {
     const totalDBPromise = getDocs("crosswalk");
     const roadPromise = getDocs("Road");
     const shortRoutePromise = getDocs("shortRoute");
-    const tP = [];
-    tP.push(shortRoutePromise, roadPromise);
-    FindFastRoute(tP, "road1", "road5");
+
+    tp.push(shortRoutePromise, roadPromise);
+
     let loaded = false;
     const totalDB = [];
     totalDBPromise.then((querySnapshot) => {
@@ -43,6 +49,7 @@ const Map = ({ mapLat, mapLng }) => {
         loaded = true;
       });
     });
+
     interval = setInterval(() => {
       if (loaded) setResult(displayMarker(totalDB));
       setNow(new Date());
@@ -53,6 +60,7 @@ const Map = ({ mapLat, mapLng }) => {
     setLoad(true);
     return () => {
       console.log(">>>>>>>>>>>>>>>>>before clear interval");
+
       clearInterval(interval);
     };
   }, []);
@@ -66,6 +74,18 @@ const Map = ({ mapLat, mapLng }) => {
     let mt = []; //measureTime 가져옴
     let wt = []; //waitingTime 가져옴
     let name = [];
+
+    // totalDB2.forEach((data)=>[
+    //   roadArray[data.name] = data
+    // ])
+    // totalDB3.forEach((data)=>[
+    //   routeArray[data.name] = data
+    // ])
+    // console.log(roadArray)
+
+    // totalDB[0].forEach((data)=>{
+    //   shortRoute.push()
+    // })
 
     totalDB.forEach((value) => {
       for (let i = 0; i < value.position.length; i++) {
@@ -145,12 +165,17 @@ const Map = ({ mapLat, mapLng }) => {
           </div>
           <button
             className="findWayBtn"
-            onClick={() => {
+            onClick={async () => {
               if (!isModalOpen) {
                 // 팝업창이 띄워졌으면 클릭 안되게
-                console.log("hi");
                 setFindOpen(true);
               }
+
+              await FindFastRoute(tp, "LeftRoad1", "RightRoad10").then(
+                (resolvedData) => (shortRoute = resolvedData)
+              );
+              shortTime = shortRoute.time;
+              shortRoute = shortRoute.visit;
             }}
           >
             <p className="direction">↱</p>
