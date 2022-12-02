@@ -1,3 +1,44 @@
 div {
   white-space: pre-line;
 }
+
+.red{
+  color:red;
+}
+
+.green{
+  color: green;
+}
+
+.name{
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.YTL-state{
+  font-style: oblique;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.timetable{
+  width: 100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+caption{
+  text-align: center;
+  border: 1px solid black;
+  background-color:rgb(5, 96, 52);
+  color: white;
+}
+
+th,td{
+  text-align: center;
+  border: 1px solid black;
+}
+
+thead{
+  background-color: rgb(2, 158, 83);
+}

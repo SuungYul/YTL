@@ -11,7 +11,7 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    height: "30%",
+    height: "50%",
     width: "20%",
     transform: "translate(-40%, -10%)",
   },
@@ -19,7 +19,7 @@ const customStyles = {
 
 const findWayStyles = {
   content: {
-    top: "20%",
+    top: "30%",
     left: "50%",
     right: "auto",
     bottom: "auto",
@@ -40,12 +40,12 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
         style={customStyles}
       >
         <div>
-          {data.name + "\n선택하신 횡단보도는 "}{" "}
-          {data.currentSign === "red" ? "빨간불" : "초록불"}{" "}
-          {", " + data.leftTime + "초 남았습니다."}
+          <p className="name">{data.name + "\n"}</p>
+          <p>{"선택하신 횡단보도는 "}{" "}</p>
+          <p className="YTL-state">{data.currentSign === "red" ? <p className="red">"빨간불"</p> : <p className="green">"초록불"</p>}{" "}</p>
+          <p>{"신호 변경까지 "+data.leftTime + "초 남았습니다."}</p>
         </div>
         <div>
-          <p>시간표</p>
           {drawTable(isModalOpen, data)}
         </div>
       </Modal>
@@ -113,16 +113,27 @@ function drawTable(isModalOpen, data) {
               date +
               "일 " +
               hour +
-              "시 " +
+              ":" +
               i +
-              "분 " +
+              ":" +
               second +
-              "초"}
+              ""}
           </td>
         </tr>
       );
     }
     i++;
   }
-  return <table>{result}</table>;
+  return <table className="timetable">
+    <caption className="name">시간표</caption>
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>시간</th>
+        </tr>
+      </thead>
+      <tbody>
+        {result}
+      </tbody>
+    </table>;
 }
