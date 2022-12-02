@@ -9,9 +9,10 @@
     top: 3%;
 
     /* 글자 가운데 정렬*/
-    align-items: center; 
+    /* align-items: center; 
     display: flex;
-    justify-content: center;
+    justify-content: center; */
+    text-align: center;
     
     /* font-size: 30px; */
     /* opacity: 70%; */
