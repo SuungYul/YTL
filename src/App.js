@@ -7,10 +7,11 @@ const App = () => {
   let mapLat = "37.23229";
   let mapLng = "127.188205";
   const [isLoad, setLoad] = useState(false);
-
+  
   useEffect(() => {
     setLoad(true);
   });
+
   return isLoad ? (
     <div className="row mt-1">
       <Router>
