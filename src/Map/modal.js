@@ -45,8 +45,8 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
           {", " + data.leftTime + "초 남았습니다."}
         </div>
         <div>
-          <button>출발</button>
-          <button>도착</button>
+          <p>시간표</p>
+          {drawTable(isModalOpen, data)}
         </div>
       </Modal>
     </>
@@ -88,4 +88,54 @@ export function FindWay({ isFindOpen, setFindOpen }) {
       </Modal>
     </>
   );
+}
+
+function drawTable(isModalOpen, data) {
+  if (!isModalOpen) return;
+  console.log(data);
+  let minute = data.minute;
+  const second = data.second;
+  const now = new Date();
+  console.log(now.getHours());
+  const result = [];
+  let index = 1;
+
+  let m = now.getMinutes();
+  let i = m;
+  let hour = now.getHours();
+  let month = now.getMonth() + 1;
+  let date = now.getDate();
+  let hourCount = 0;
+  while (hourCount < 6) {
+    if (i >= 60) {
+      i %= 60;
+      hourCount++;
+      hour++;
+      if (hour > 24) {
+        date++;
+        hour %= 24;
+      }
+    }
+    if (i % 3 === minute) {
+      result.push(
+        <tr>
+          <td>{index++}</td>
+          <td>
+            {month +
+              "월 " +
+              date +
+              "일 " +
+              hour +
+              "시 " +
+              i +
+              "분 " +
+              second +
+              "초"}
+          </td>
+        </tr>
+      );
+    }
+    i++;
+  }
+  return <table>{result}</table>;
 }

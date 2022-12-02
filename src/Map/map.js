@@ -30,6 +30,7 @@ const Map = ({ mapLat, mapLng }) => {
     lat: mapLat,
     lng: mapLng,
   });
+  const [now, setNow] = useState(new Date());
   let interval;
 
   //FindFastRoute("shortRoute", "road1", "road5");
@@ -59,6 +60,7 @@ const Map = ({ mapLat, mapLng }) => {
 
     interval = setInterval(() => {
       if (loaded) setResult(displayMarker(totalDB));
+      setNow(new Date());
     }, 1000);
   }, []);
 
@@ -115,6 +117,7 @@ const Map = ({ mapLat, mapLng }) => {
     for (let i = 0; i < t.length; i++) {
       const check = CheckGreen(mt[i], t[i], wt[i]);
       check.name = name[i];
+      check.measureTime = mt[i];
       r.push(
         <Marker
           key={index++}
@@ -158,7 +161,21 @@ const Map = ({ mapLat, mapLng }) => {
         loading={<p>Maps Loading...</p>}
       >
         <div className="map">
-          <div className="info">YTL Project</div>
+          <div className="info">
+            <p>YTL Project</p>
+            <p>
+              {"현재시간 " +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getDate() +
+                " " +
+                now.getHours() +
+                ":" +
+                now.getMinutes() +
+                ":" +
+                now.getSeconds()}
+            </p>
+          </div>
           <button
             className="findWayBtn"
             onClick={async () => {
@@ -167,7 +184,7 @@ const Map = ({ mapLat, mapLng }) => {
                 setFindOpen(true);
               }
 
-              await FindFastRoute(tp,"LeftRoad1","MjuStation").then((resolvedData) => 
+              await FindFastRoute(tp,"LeftRoad1","RightRoad10").then((resolvedData) => 
                 shortRoute = resolvedData
               );
               shortTime = shortRoute.time
