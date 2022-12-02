@@ -41,20 +41,24 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
       >
         <div>
           <p className="name">{data.name + "\n"}</p>
-          <p>{"선택하신 횡단보도는 "}{" "}</p>
-          <p className="YTL-state">{data.currentSign === "red" ? <p className="red">"빨간불"</p> : <p className="green">"초록불"</p>}{" "}</p>
-          <p>{"신호 변경까지 "+data.leftTime + "초 남았습니다."}</p>
+          <p>{"선택하신 횡단보도는 "} </p>
+          <p className="YTL-state">
+            {data.currentSign === "red" ? (
+              <p className="red">"빨간불"</p>
+            ) : (
+              <p className="green">"초록불"</p>
+            )}{" "}
+          </p>
+          <p>{"신호 변경까지 " + data.leftTime + "초 남았습니다."}</p>
         </div>
-        <div>
-          {drawTable(isModalOpen, data)}
-        </div>
+        <div>{drawTable(isModalOpen, data)}</div>
       </Modal>
     </>
   );
 }
 
-function  pickPoint(){
-  return "road1"
+function pickPoint() {
+  return "road1";
 }
 
 export function FindWay({ isFindOpen, setFindOpen }) {
@@ -73,16 +77,24 @@ export function FindWay({ isFindOpen, setFindOpen }) {
             <span>출발 내용</span>
             <button onClick={() => {}}>출발</button>
             <span>{startPoint}</span>
-            <button onClick={()=>{
-              setstartPoint(pickPoint())
-              }}>출발</button>
+            <button
+              onClick={() => {
+                setstartPoint(pickPoint());
+              }}
+            >
+              출발
+            </button>
           </div>
 
           <div>
             <span>{endPoint}</span>
-            <button onClick={()=>{
-              setendPoint(pickPoint())
-              }}>도착</button>
+            <button
+              onClick={() => {
+                setendPoint(pickPoint());
+              }}
+            >
+              도착
+            </button>
           </div>
         </div>
       </Modal>
@@ -99,54 +111,36 @@ function drawTable(isModalOpen, data) {
   console.log(now.getHours());
   const result = [];
   let index = 1;
+  now.setSeconds(second);
 
-  let m = now.getMinutes();
-  let i = m;
-  let hour = now.getHours();
-  let month = now.getMonth() + 1;
-  let date = now.getDate();
-  let hourCount = 0;
-  while (hourCount < 6) {
-    if (i >= 60) {
-      i %= 60;
-      hourCount++;
-      hour++;
-      if (hour > 24) {
-        date++;
-        hour %= 24;
-      }
+  for (let t = 0; t < 3; t++) {
+    //현재 시간 이후 주기에 맞는 시간을 찾음
+    if ((now.getMinutes() + t) % 3 === minute) {
+      now.setMinutes(now.getMinutes() + t);
+      break;
     }
-    if (i % 3 === minute) {
-      result.push(
-        <tr>
-          <td>{index++}</td>
-          <td>
-            {month +
-              "월 " +
-              date +
-              "일 " +
-              hour +
-              ":" +
-              i +
-              ":" +
-              second +
-              ""}
-          </td>
-        </tr>
-      );
-    }
-    i++;
   }
-  return <table className="timetable">
-    <caption className="name">시간표</caption>
+
+  for (let i = 0; i < 50; i++) {
+    // 향후 50개만 보여줌
+    result.push(
+      <tr>
+        <td>{index++}</td>
+        <td>{now.toLocaleString()}</td>
+      </tr>
+    );
+    now.setMinutes(now.getMinutes() + 3);
+  }
+  return (
+    <table className="timetable">
+      <caption className="name">시간표</caption>
       <thead>
         <tr>
           <th>번호</th>
           <th>시간</th>
         </tr>
       </thead>
-      <tbody>
-        {result}
-      </tbody>
-    </table>;
+      <tbody>{result}</tbody>
+    </table>
+  );
 }

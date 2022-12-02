@@ -150,18 +150,7 @@ const Map = ({ mapLat, mapLng }) => {
         <div className="map">
           <div className="info">
             <p className="info-project">YTL Project</p>
-            <p className="info-time">
-              {"현재시간 : " +
-                (now.getMonth() + 1) +
-                "월 " +
-                now.getDate() +
-                "일 " +
-                now.getHours() +
-                ":" +
-                now.getMinutes() +
-                ":" +
-                now.getSeconds()}
-            </p>
+            <p className="info-time">{now.toLocaleString()}</p>
           </div>
           <button
             className="findWayBtn"
