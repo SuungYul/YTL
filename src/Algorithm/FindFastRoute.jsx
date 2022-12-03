@@ -19,7 +19,7 @@ function dfs(
   times
 ) {
   // console.log(currentRoad,times)
-  console.log(rememberRoute)
+  // console.log(rememberRoute)
   times += roadArray[currentRoad].time;
   // console.log(22,roadArray[currentRoad])
   if (roadArray[currentRoad].visit) {
@@ -30,15 +30,14 @@ function dfs(
   rememberRoute.push(currentRoad);
 
   if (currentRoad == endRoad) {
-    console.log(lastRoute, lasttime)
-    // console.log(rememberRoute, lasttime, times)
+    // console.log(lastRoute, lasttime)
+    console.log(lasttime, times)
     if (lasttime > times) {
       lastRoute = [];
       rememberRoute.forEach((doc) => {
         lastRoute.push(doc);
       });
       lasttime = times;
-      //여기서 전역변수인 lastRoute를 변경해도 마지막에 변경이 안됨 93번쨰를 보세요
       return
     }
   }
@@ -80,10 +79,10 @@ function dfs(
     for(let k = 0; k<crossArray[roadArray[currentRoad].connect[i]].connect.length; k++){
       let nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[k];
 
-      // console.log(endRoad)
+    //  console.log(roadArray[endRoad])
       if(roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
       if(roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat)continue
-      if(roadArray[currentRoad].name[0] == roadArray[nextRoad][0]) continue
+      if(roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0]) continue
       // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
 
 
