@@ -82,7 +82,8 @@ function dfs(
     //  console.log(roadArray[endRoad])
       if(roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
       if(roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat)continue
-      if(roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0]) continue
+      // console.log(roadArray[currentRoad].connect.includes(nextRoad))
+      if(roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
       // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
 
 
