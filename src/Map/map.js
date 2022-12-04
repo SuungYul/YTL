@@ -184,7 +184,7 @@ const Map = ({ mapLat, mapLng }) => {
                 setFindOpen(true);
               }
 
-              await FindFastRoute(tp,"LeftRoad3","RightRoad10").then((resolvedData) => 
+              await FindFastRoute(tp,"LeftRoad3","RightRoad8").then((resolvedData) => 
                 shortRoute = resolvedData
               );
               shortTime = shortRoute.time

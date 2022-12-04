@@ -25,18 +25,26 @@ function dfs(
   if (roadArray[currentRoad].visit) {
     return;
   }
-  
+
   roadArray[currentRoad].visit = true;
   rememberRoute.push(currentRoad);
 
   if (currentRoad == endRoad) {
-    // console.log(lastRoute, lasttime)
-    console.log(lasttime, times)
+
+    // console.log(lasttime, times)
     if (lasttime > times) {
       lastRoute = [];
+
       rememberRoute.forEach((doc) => {
-        lastRoute.push(doc);
+        console.log(roadArray[doc])
+        if (roadArray[doc] != undefined) {
+          lastRoute.push(roadArray[doc].startPoint, roadArray[doc].endPoint);
+        } else {
+          lastRoute.push(crossArray[doc].startPoint, crossArray[doc].endPoint);
+        }
+
       });
+      console.log(lastRoute, lasttime)
       lasttime = times;
       return
     }
@@ -45,8 +53,8 @@ function dfs(
   //현재 길과 이어진 횡단보도를 계산해서 그 시간을 더하고 그 횡단보도에서 갈수 잇는
   //길로 이동하여 함수를 준다
   for (let i = 0; i < roadArray[currentRoad].connect.length; i++) {
-    
-    if(crossArray[roadArray[currentRoad].connect[i]]==undefined){
+
+    if (crossArray[roadArray[currentRoad].connect[i]] == undefined) {
       // console.log(roadArray.includes(roadArray[currentRoad].connect[i]))
       dfs(
         roadArray,
@@ -60,9 +68,9 @@ function dfs(
       continue;
     }//여기 수정함
 
-    if(crossArray[roadArray[currentRoad].connect[i]]==undefined)return
+    if (crossArray[roadArray[currentRoad].connect[i]] == undefined) return
 
-    if(crossArray[roadArray[currentRoad].connect[i]].visit == true)continue;
+    if (crossArray[roadArray[currentRoad].connect[i]].visit == true) continue;
     crossArray[roadArray[currentRoad].connect[i]].visit = true
 
     // console.log(crossArray[roadArray[currentRoad].connect[i]])
@@ -76,14 +84,13 @@ function dfs(
 
     rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
 
-    for(let k = 0; k<crossArray[roadArray[currentRoad].connect[i]].connect.length; k++){
+    for (let k = 0; k < crossArray[roadArray[currentRoad].connect[i]].connect.length; k++) {
       let nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[k];
 
-    //  console.log(roadArray[endRoad])
-      if(roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
-      if(roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat)continue
-      // console.log(roadArray[currentRoad].connect.includes(nextRoad))
-      if(roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
+      //  console.log(roadArray[endRoad])
+      if (roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
+      if (roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat) continue
+      if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
       // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
 
 
@@ -163,7 +170,7 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   });
 
 
-  
+
   await crossWalkCollection[1].then((결과2) => {
     결과2.forEach((doc) => {
       roadArray[doc.data().name] = doc.data();
