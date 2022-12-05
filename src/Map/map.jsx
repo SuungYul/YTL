@@ -12,14 +12,21 @@ import "./map.css";
 import AlgorithmData from "../database/AlgorithmData";
 
 
-let shortRoute = []
-let shortTime = 0
-const routedata = 0
 const tp = [];
 
 
 const Map = ({ mapLat, mapLng }) => {
   const YOUR_CLIENT_ID = "w4msaekuxw"
+  const [poly, setpoly] = useState([])
+
+  const [route,setroute]=useState({
+    lat: 0,
+    lng: 0,
+  })
+  const [route2,setroute2]=useState({
+    lat: 0,
+    lng: 0,
+  })
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isFindOpen, setFindOpen] = useState(false);
@@ -75,7 +82,46 @@ const Map = ({ mapLat, mapLng }) => {
     };
   }, []);
 
+  async function s() {
+    let shortRoute = []
+    let shortTime = 0
+    let out = []
 
+    // useEffect(async () => {
+
+      await FindFastRoute(tp, "LeftRoad3", "RightRoad8").then((resolvedData) =>
+        shortRoute = resolvedData
+      );
+      shortTime = shortRoute.time
+      shortRoute = shortRoute.visit
+
+      // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
+      // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
+
+      for (let temp = 0; temp < shortRoute.length; temp ++) {
+
+        out.push(
+          <Polyline
+            path={[
+              { lat: shortRoute[temp]._lat, lng: shortRoute[temp]._long },
+              { lat: shortRoute[temp + 1]._lat, lng: shortRoute[temp + 1]._long },
+            ]}
+            strokeColor={"#5347AA"}
+            strokeStyle={"solid"}
+            strokeOpacity={0.5}
+            strokeWeight={5}
+          />
+        )
+        temp++
+        // console.log(out)
+      }
+      console.log(out)
+      await setpoly(out)
+      console.log(poly)
+      return out
+    // }, []);
+    
+  }
 
   function displayMarker(totalDB) {
     let index = 0;
@@ -182,13 +228,13 @@ const Map = ({ mapLat, mapLng }) => {
               if (!isModalOpen) {
                 // 팝업창이 띄워졌으면 클릭 안되게
                 setFindOpen(true);
+                setpoly([])
               }
 
-              await FindFastRoute(tp,"LeftRoad3","RightRoad8").then((resolvedData) => 
-                shortRoute = resolvedData
-              );
-              shortTime = shortRoute.time
-              shortRoute = shortRoute.visit
+              // await setpoly(s())
+              s()
+              console.log(poly)
+              
             }}
           >
             <p className="direction">↱</p>
@@ -203,13 +249,13 @@ const Map = ({ mapLat, mapLng }) => {
             zIndex={0}
           >
             {result}
-            <Marker
+            {/* <Marker
               position={{ lat: mapLat, lng: mapLng }}
               onClick={() => {
                 setModalOpen(true);
               }}
-            />
-            <Marker
+            /> */}
+            {/* <Marker
               position={{
                 lat: "37.230598234139315",
                 lng: "127.18792639494912",
@@ -217,17 +263,28 @@ const Map = ({ mapLat, mapLng }) => {
               onClick={() => {
                 setModalOpen(true);
               }}
-            />
-            <Polyline
+            /> */}
+            {/* <Polyline
               path={[
                 { lat: mapLat, lng: mapLng },
                 { lat: "37.230598234139315", lng: "127.18792639494912" },
               ]}
               strokeColor={"#5347AA"}
-              strokeStyle={"longdash"}
+              strokeStyle={"solid"}
               strokeOpacity={0.5}
               strokeWeight={5}
-            />
+            /> */}
+            {poly}
+            {/* <Polyline
+              path={[
+                { lat: route.lat, lng: route.lng },
+                { lat: route2.lat, lng: route2.lng },
+              ]}
+              strokeColor={"#5347AA"}
+              strokeStyle={"solid"}
+              strokeOpacity={0.5}
+              strokeWeight={5}
+            /> */}
             <PopUp
               isModalOpen={isModalOpen}
               setModalOpen={setModalOpen}

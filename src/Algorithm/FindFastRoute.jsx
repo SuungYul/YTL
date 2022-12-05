@@ -36,7 +36,7 @@ function dfs(
       lastRoute = [];
 
       rememberRoute.forEach((doc) => {
-        console.log(roadArray[doc])
+        // console.log(roadArray[doc])
         if (roadArray[doc] != undefined) {
           lastRoute.push(roadArray[doc].startPoint, roadArray[doc].endPoint);
         } else {
@@ -44,7 +44,7 @@ function dfs(
         }
 
       });
-      console.log(lastRoute, lasttime)
+      // console.log(lastRoute, lasttime)
       lasttime = times;
       return
     }
