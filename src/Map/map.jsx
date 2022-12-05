@@ -14,7 +14,6 @@ import AlgorithmData from "../database/AlgorithmData";
 
 const tp = [];
 
-
 const Map = ({ mapLat, mapLng }) => {
   const YOUR_CLIENT_ID = "w4msaekuxw"
   const [poly, setpoly] = useState([])
@@ -46,9 +45,7 @@ const Map = ({ mapLat, mapLng }) => {
     const roadPromise = getDocs("Road");
     const shortRoutePromise = getDocs("shortRoute");
 
-    tp.push(shortRoutePromise,roadPromise)
-
-
+    tp.push(shortRoutePromise, roadPromise);
 
     let loaded = false;
     const totalDB = [];
@@ -61,19 +58,13 @@ const Map = ({ mapLat, mapLng }) => {
       });
     });
 
-
-
-
-
     interval = setInterval(() => {
       if (loaded) setResult(displayMarker(totalDB));
       setNow(new Date());
     }, 1000);
   }, []);
 
-
   useEffect(() => {
-
     setLoad(true);
     return () => {
       console.log(">>>>>>>>>>>>>>>>>before clear interval");
@@ -133,7 +124,6 @@ const Map = ({ mapLat, mapLng }) => {
     let wt = []; //waitingTime 가져옴
     let name = [];
 
-
     // totalDB2.forEach((data)=>[
     //   roadArray[data.name] = data
     // ])
@@ -145,7 +135,7 @@ const Map = ({ mapLat, mapLng }) => {
     // totalDB[0].forEach((data)=>{
     //   shortRoute.push()
     // })
-    
+
     totalDB.forEach((value) => {
       for (let i = 0; i < value.position.length; i++) {
         p.push(value.position[i]);
@@ -208,19 +198,8 @@ const Map = ({ mapLat, mapLng }) => {
       >
         <div className="map">
           <div className="info">
-            <p>YTL Project</p>
-            <p>
-              {"현재시간 " +
-                (now.getMonth() + 1) +
-                "/" +
-                now.getDate() +
-                " " +
-                now.getHours() +
-                ":" +
-                now.getMinutes() +
-                ":" +
-                now.getSeconds()}
-            </p>
+            <p className="info-project">YTL Project</p>
+            <p className="info-time">{now.toLocaleString()}</p>
           </div>
           <button
             className="findWayBtn"
@@ -299,6 +278,5 @@ const Map = ({ mapLat, mapLng }) => {
     "Loading...."
   );
 };
-
 
 export default Map;
