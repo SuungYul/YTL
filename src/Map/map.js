@@ -94,7 +94,7 @@ const Map = ({ mapLat, mapLng }) => {
     await setpoly([])
     // useEffect(async () => {
 
-    await FindFastRoute(tp, "LeftRoad3", "FirstApartRoad2").then((resolvedData) =>
+    await FindFastRoute(tp, "RightRoad3", "FirstApartRoad2").then((resolvedData) =>
       shortRoute = resolvedData
     );
     shortTime = shortRoute.time
@@ -103,7 +103,7 @@ const Map = ({ mapLat, mapLng }) => {
     // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
     // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
 
-    for (let temp = 0; temp < shortRoute.length; temp++) {
+    for (let temp = 0; temp < shortRoute.length; temp+=2) {
 
       out.push(
         <Polyline
@@ -117,7 +117,7 @@ const Map = ({ mapLat, mapLng }) => {
           strokeWeight={5}
         />
       )
-      temp++
+      
       // console.log(out)
     }
     console.log(out)

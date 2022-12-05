@@ -20,15 +20,15 @@ function dfs(
 ) {
   // console.log(currentRoad,times)
   // console.log(rememberRoute)
-  times += roadArray[currentRoad].time;
+
   // console.log(22,roadArray[currentRoad])
-  if (roadArray[currentRoad].visit) {
+  if (roadArray[currentRoad].visit == true) {
     return;
   }
 
   roadArray[currentRoad].visit = true;
   rememberRoute.push(currentRoad);
-
+  times += roadArray[currentRoad].time;
   if (currentRoad == endRoad) {
 
     // console.log(lasttime, times)
@@ -70,40 +70,47 @@ function dfs(
       continue;
     }//여기 수정함
 
-    if (crossArray[roadArray[currentRoad].connect[i]] == undefined) return
+    if (crossArray[roadArray[currentRoad].connect[i]] == undefined) continue
 
     if (crossArray[roadArray[currentRoad].connect[i]].visit == true) continue;
-    crossArray[roadArray[currentRoad].connect[i]].visit = true
+    // crossArray[roadArray[currentRoad].connect[i]].visit = true
 
     // console.log(crossArray[roadArray[currentRoad].connect[i]])
 
 
 
-    rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
+    
 
     for (let k = 0; k < crossArray[roadArray[currentRoad].connect[i]].connect.length; k++) {
       let nextRoad = crossArray[roadArray[currentRoad].connect[i]].connect[k];
-
+      if (nextRoad == currentRoad) {
+        continue
+      }
       //  console.log(roadArray[endRoad])
       if (roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
       if (roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat) continue
       // if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
       // // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
-
+      // console.log(crossArray[roadArray[currentRoad].connect[i]].name.includes('Middle'))
       if(crossArray[roadArray[currentRoad].connect[i]].name.includes('Middle')){
-        if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
+        if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0]) {
+          continue
+        }
       }
+      if(roadArray[currentRoad].endPoint._lat > roadArray[nextRoad].startPoint._lat + 0.001) continue
       const timeResult = CheckGreen(
         crossArray[roadArray[currentRoad].connect[i]].measureTime,
         crossArray[roadArray[currentRoad].connect[i]].greenTime,
         0
       )
+
       const walkTIme =
       crossArray[roadArray[currentRoad].connect[i]].greenTime - 7;
-      if (nextRoad == currentRoad) {
-        continue
-      }
+
+
       if (timeResult.currentSign == "빨간불") {
+        crossArray[roadArray[currentRoad].connect[i]].visit = true
+        rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
         dfs(
           roadArray,
           crossArray,
@@ -113,8 +120,12 @@ function dfs(
           endRoad,
           times + timeResult.leftTime
         );
+        crossArray[roadArray[currentRoad].connect[i]].visit = false
+        rememberRoute.pop();
       } else {
         if (timeResult.leftTime < walkTIme) {
+          crossArray[roadArray[currentRoad].connect[i]].visit = true
+          rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
           dfs(
             roadArray,
             crossArray,
@@ -127,7 +138,11 @@ function dfs(
             crossArray[roadArray[currentRoad].connect[i]].greenTime +
             timeResult.leftTime
           );
+          crossArray[roadArray[currentRoad].connect[i]].visit = false
+          rememberRoute.pop();
         } else {
+          crossArray[roadArray[currentRoad].connect[i]].visit = true
+          rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
           dfs(
             roadArray,
             crossArray,
@@ -135,13 +150,16 @@ function dfs(
             rememberRoute,
             startRoad,
             endRoad,
-            times + timeResult.leftTime
+            times + walkTIme
           );
+          crossArray[roadArray[currentRoad].connect[i]].visit = false
+          rememberRoute.pop();
         }
       }
     }
-    crossArray[roadArray[currentRoad].connect[i]].visit = false
-    rememberRoute.pop();
+
+    // crossArray[roadArray[currentRoad].connect[i]].visit = false
+    // rememberRoute.pop();
   }
 
   rememberRoute.pop();
@@ -175,7 +193,6 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   });
 
 
-
   await crossWalkCollection[1].then((결과2) => {
     결과2.forEach((doc) => {
       roadArray[doc.data().name] = doc.data();
@@ -183,6 +200,8 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
     });
     //여기서 lastRoute를 호출하면 안들어잇다고 나옴
   });
+
+
 
   // console.log(roadArray[startPoint]);
 
