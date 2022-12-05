@@ -38,8 +38,10 @@ function dfs(
       rememberRoute.forEach((doc) => {
         // console.log(roadArray[doc])
         if (roadArray[doc] != undefined) {
+          // lastRoute.push(roadArray[doc].name)
           lastRoute.push(roadArray[doc].startPoint, roadArray[doc].endPoint);
         } else {
+          // lastRoute.push(crossArray[doc].name)
           lastRoute.push(crossArray[doc].startPoint, crossArray[doc].endPoint);
         }
 
@@ -74,13 +76,8 @@ function dfs(
     crossArray[roadArray[currentRoad].connect[i]].visit = true
 
     // console.log(crossArray[roadArray[currentRoad].connect[i]])
-    const timeResult = CheckGreen(
-      crossArray[roadArray[currentRoad].connect[i]].measureTime,
-      crossArray[roadArray[currentRoad].connect[i]].greenTime,
-      0
-    )
-    const walkTIme =
-      crossArray[roadArray[currentRoad].connect[i]].greenTime - 7;
+
+
 
     rememberRoute.push(crossArray[roadArray[currentRoad].connect[i]].name);
 
@@ -90,11 +87,19 @@ function dfs(
       //  console.log(roadArray[endRoad])
       if (roadArray[nextRoad].startPoint._lat > roadArray[endRoad].startPoint._lat) continue
       if (roadArray[nextRoad].startPoint._lat < roadArray[startRoad].startPoint._lat) continue
-      if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
-      // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
+      // if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
+      // // if(roadArray[nextRoad].endPoint._lang > roadArray[endRoad].startPoint._lang + 0.002) continue
 
-
-
+      if(crossArray[roadArray[currentRoad].connect[i]].name.includes('Middle')){
+        if (roadArray[currentRoad].name[0] == roadArray[nextRoad].name[0] && roadArray[currentRoad].connect.includes(nextRoad) == true) continue
+      }
+      const timeResult = CheckGreen(
+        crossArray[roadArray[currentRoad].connect[i]].measureTime,
+        crossArray[roadArray[currentRoad].connect[i]].greenTime,
+        0
+      )
+      const walkTIme =
+      crossArray[roadArray[currentRoad].connect[i]].greenTime - 7;
       if (nextRoad == currentRoad) {
         continue
       }
