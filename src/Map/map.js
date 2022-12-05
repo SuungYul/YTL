@@ -94,7 +94,7 @@ const Map = ({ mapLat, mapLng }) => {
     await setpoly([])
     // useEffect(async () => {
 
-    await FindFastRoute(tp, "RightRoad3", "FirstApartRoad2").then((resolvedData) =>
+    await FindFastRoute(tp, "RightRoad3", "LeftRoad9").then((resolvedData) =>
       shortRoute = resolvedData
     );
     shortTime = shortRoute.time
@@ -154,7 +154,7 @@ const Map = ({ mapLat, mapLng }) => {
 
     const r = [];
     for (let i = 0; i < t.length; i++) {
-      const check = CheckGreen(mt[i], t[i], wt[i]);
+      const check = CheckGreen(mt[i], t[i], wt[i], 0, 0);
       check.name = name[i];
       check.measureTime = mt[i];
       r.push(
