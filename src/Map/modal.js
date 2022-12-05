@@ -30,6 +30,19 @@ const findWayStyles = {
   },
 };
 
+const HelpStyles = {
+  content: {
+    top: "30%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    height: "50%",
+    width: "20%",
+    transform: "translate(-40%, -10%)",
+  },
+};
+
 export function PopUp({ isModalOpen, setModalOpen, data }) {
   return (
     <>
@@ -96,6 +109,36 @@ export function FindWay({ isFindOpen, setFindOpen }) {
               도착
             </button>
           </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+export function Help({ isHelpOpen, setHelpOpen }) {
+  return (
+    <>
+      <button onClick={() => setHelpOpen(true)}>Help Open</button>
+      <Modal
+        isOpen={isHelpOpen}
+        onRequestClose={() => setHelpOpen(false)}
+        style={HelpStyles}
+      >
+        <div>
+            <span className="title">도움말</span>
+            <div className="information">
+              <li className="subtitle">정보</li>
+              <p> 이 웹사이트는 <p className="projc">YTL 프로젝트</p>로, 명지대학교 자연캠퍼스 근처의 신호등 정보를 제공하는 곳입니다.</p>
+              <li className="subtitle">사용 방법</li>
+              <ul>
+                <li>상단 중앙 로고에는 프로젝트 이름 YTL과 현재 시간이 표시되어 있습니다.</li>
+                <li>지도는 일반 네이버 지도와 같습니다.</li>
+                <li>숫자가 표시된 빨간색 또는 초록색 원형은 그 위치의 횡단보도 신호와 시간을 표시해줍니다.</li>
+                <li><div className="redstate">숫자</div> 또는 <div className="greenstate">숫자</div>를 클릭하시면 남은 시간과
+                  앞으로의 신호에 대한 시간표를 확인할 수 있습니다.</li>
+                <li>로고 우측의 길 찾기 버튼을 통해 원하는 출발, 도착 마커를 지정하여 최단 시간이 걸리는 경로를 확인할 수 있습니다.</li>  
+              </ul>
+            </div>
         </div>
       </Modal>
     </>
