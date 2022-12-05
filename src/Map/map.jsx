@@ -77,39 +77,39 @@ const Map = ({ mapLat, mapLng }) => {
     let shortRoute = []
     let shortTime = 0
     let out = []
-
+    await setpoly([])
     // useEffect(async () => {
 
-      await FindFastRoute(tp, "LeftRoad3", "RightRoad8").then((resolvedData) =>
-        shortRoute = resolvedData
-      );
-      shortTime = shortRoute.time
-      shortRoute = shortRoute.visit
+    await FindFastRoute(tp, "LeftRoad3", "RightRoad8").then((resolvedData) =>
+      shortRoute = resolvedData
+    );
+    shortTime = shortRoute.time
+    shortRoute = shortRoute.visit
 
-      // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
-      // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
+    // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
+    // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
 
-      for (let temp = 0; temp < shortRoute.length; temp ++) {
+    for (let temp = 0; temp < shortRoute.length; temp++) {
 
-        out.push(
-          <Polyline
-            path={[
-              { lat: shortRoute[temp]._lat, lng: shortRoute[temp]._long },
-              { lat: shortRoute[temp + 1]._lat, lng: shortRoute[temp + 1]._long },
-            ]}
-            strokeColor={"#5347AA"}
-            strokeStyle={"solid"}
-            strokeOpacity={0.5}
-            strokeWeight={5}
-          />
-        )
-        temp++
-        // console.log(out)
-      }
-      console.log(out)
-      await setpoly(out)
-      console.log(poly)
-      return out
+      out.push(
+        <Polyline
+          path={[
+            { lat: shortRoute[temp]._lat, lng: shortRoute[temp]._long },
+            { lat: shortRoute[temp + 1]._lat, lng: shortRoute[temp + 1]._long },
+          ]}
+          strokeColor={"#5347AA"}
+          strokeStyle={"solid"}
+          strokeOpacity={0.5}
+          strokeWeight={5}
+        />
+      )
+      temp++
+      // console.log(out)
+    }
+    console.log(out)
+    await setpoly(out)
+    console.log(poly)
+    return out
     // }, []);
     
   }
