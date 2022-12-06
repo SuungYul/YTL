@@ -94,7 +94,7 @@ const Map = ({ mapLat, mapLng }) => {
     await setpoly([])
     // useEffect(async () => {
 
-    await FindFastRoute(tp, "RightRoad3", "LeftRoad9").then((resolvedData) =>
+    await FindFastRoute(tp, "RightRoad3", "LeftRoad12").then((resolvedData) =>
       shortRoute = resolvedData
     );
     shortTime = shortRoute.time
