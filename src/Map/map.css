@@ -63,6 +63,34 @@
     /* font-size: 30px; */
 }
 
+.helpBtn{
+    position: absolute;
+    z-index: 1;
+
+    color:rgb(0, 0, 0);
+    background-color:rgb(255, 255, 255);
+    width: 90px;
+    height: 90px;
+    left: 90%;
+    top: 80%;
+
+    padding-top: 5px;
+    border: 3px outset rgb(88, 88, 88);
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.helpBtn:hover{
+    color: rgb(194, 0, 0);
+    border: 3px outset rgb(255, 0, 0);
+}
+
+.qMark{
+    font-size: 15px;
+    font-weight: 900;
+}
+
 .direction{
     margin-top: 0px;
     font-size: 30px;

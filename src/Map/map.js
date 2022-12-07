@@ -7,7 +7,7 @@ import FindFastRoute from "../Algorithm/FindFastRoute";
 import calculatedData from "../database/calculatedData";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
-import { FindWay, PopUp } from "./modal";
+import { FindWay, PopUp, Help } from "./modal";
 import "./map.css";
 import AlgorithmData from "../database/AlgorithmData";
 
@@ -29,6 +29,7 @@ const Map = ({ mapLat, mapLng }) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isFindOpen, setFindOpen] = useState(false);
+  const [isHelpOpen, setHelpOpen] = useState(false);
   const [result, setResult] = useState([]);
   const [isLoaded, setLoad] = useState(false);
   const [data, setData] = useState(new calculatedData());
@@ -204,7 +205,7 @@ const Map = ({ mapLat, mapLng }) => {
           <button
             className="findWayBtn"
             onClick={async () => {
-              if (!isModalOpen) {
+              if (!isFindOpen) {
                 // 팝업창이 띄워졌으면 클릭 안되게
                 setFindOpen(true);
                 setpoly([])
@@ -218,6 +219,18 @@ const Map = ({ mapLat, mapLng }) => {
           >
             <p className="direction">↱</p>
             <p className="findWay">길찾기</p>
+          </button>
+          <button 
+            className="helpBtn"
+            onClick={async () => {
+              if (!isFindOpen) {
+                // 팝업창이 띄워졌으면 클릭 안되게
+                setHelpOpen(true);
+              }
+            }}
+          >
+            <p className="qMark">?</p>
+            <p>도움말</p>
           </button>
           <NaverMap
             id="react-naver-maps"
@@ -270,6 +283,7 @@ const Map = ({ mapLat, mapLng }) => {
               data={data}
             ></PopUp>
             <FindWay isFindOpen={isFindOpen} setFindOpen={setFindOpen} />;
+            <Help isHelpOpen={isHelpOpen} setHelpOpen={setHelpOpen}/>;
           </NaverMap>
         </div>
       </RenderAfterNavermapsLoaded>
