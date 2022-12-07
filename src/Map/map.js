@@ -17,12 +17,13 @@ const tp = [];
 const Map = ({ mapLat, mapLng }) => {
   const YOUR_CLIENT_ID = "w4msaekuxw"
   const [poly, setpoly] = useState([])
+  const [startPoint, setstartPoint] = useState([])
 
-  const [route,setroute]=useState({
+  const [route, setroute] = useState({
     lat: 0,
     lng: 0,
   })
-  const [route2,setroute2]=useState({
+  const [route2, setroute2] = useState({
     lat: 0,
     lng: 0,
   })
@@ -59,6 +60,19 @@ const Map = ({ mapLat, mapLng }) => {
       });
     });
 
+    let loaded2 = false;
+    const totalDB2 = [];
+    roadPromise.then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (!totalDB2.includes(doc.data())) {
+          totalDB2.push(doc.data().startPoint._lat,doc.data().startPoint._long);
+        }
+        loaded2 = true;
+      });
+      setstartPoint(totalDB2)
+    });
+    console.log(totalDB2)
+
     interval = setInterval(() => {
       if (loaded) setResult(displayMarker(totalDB));
       setNow(new Date());
@@ -81,7 +95,7 @@ const Map = ({ mapLat, mapLng }) => {
     await setpoly([])
     // useEffect(async () => {
 
-    await FindFastRoute(tp, "LeftRoad3", "RightRoad8").then((resolvedData) =>
+    await FindFastRoute(tp, "RightRoad3", "LeftRoad12").then((resolvedData) =>
       shortRoute = resolvedData
     );
     shortTime = shortRoute.time
@@ -90,7 +104,7 @@ const Map = ({ mapLat, mapLng }) => {
     // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
     // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
 
-    for (let temp = 0; temp < shortRoute.length; temp++) {
+    for (let temp = 0; temp < shortRoute.length; temp+=2) {
 
       out.push(
         <Polyline
@@ -104,7 +118,7 @@ const Map = ({ mapLat, mapLng }) => {
           strokeWeight={5}
         />
       )
-      temp++
+      
       // console.log(out)
     }
     console.log(out)
@@ -112,7 +126,7 @@ const Map = ({ mapLat, mapLng }) => {
     console.log(poly)
     return out
     // }, []);
-    
+
   }
 
   function displayMarker(totalDB) {
@@ -125,17 +139,6 @@ const Map = ({ mapLat, mapLng }) => {
     let wt = []; //waitingTime 가져옴
     let name = [];
 
-    // totalDB2.forEach((data)=>[
-    //   roadArray[data.name] = data
-    // ])
-    // totalDB3.forEach((data)=>[
-    //   routeArray[data.name] = data
-    // ])
-    // console.log(roadArray)
-
-    // totalDB[0].forEach((data)=>{
-    //   shortRoute.push()
-    // })
 
     totalDB.forEach((value) => {
       for (let i = 0; i < value.position.length; i++) {
@@ -152,7 +155,7 @@ const Map = ({ mapLat, mapLng }) => {
 
     const r = [];
     for (let i = 0; i < t.length; i++) {
-      const check = CheckGreen(mt[i], t[i], wt[i]);
+      const check = CheckGreen(mt[i], t[i], wt[i], 0, 0);
       check.name = name[i];
       check.measureTime = mt[i];
       r.push(
@@ -208,13 +211,16 @@ const Map = ({ mapLat, mapLng }) => {
               if (!isFindOpen) {
                 // 팝업창이 띄워졌으면 클릭 안되게
                 setFindOpen(true);
+
                 setpoly([])
               }
 
-              // await setpoly(s())
               s()
-              console.log(poly)
-              
+
+              // await setpoly(s())
+
+              console.log(startPoint)
+
             }}
           >
             <p className="direction">↱</p>
@@ -241,42 +247,9 @@ const Map = ({ mapLat, mapLng }) => {
             zIndex={0}
           >
             {result}
-            {/* <Marker
-              position={{ lat: mapLat, lng: mapLng }}
-              onClick={() => {
-                setModalOpen(true);
-              }}
-            /> */}
-            {/* <Marker
-              position={{
-                lat: "37.230598234139315",
-                lng: "127.18792639494912",
-              }}
-              onClick={() => {
-                setModalOpen(true);
-              }}
-            /> */}
-            {/* <Polyline
-              path={[
-                { lat: mapLat, lng: mapLng },
-                { lat: "37.230598234139315", lng: "127.18792639494912" },
-              ]}
-              strokeColor={"#5347AA"}
-              strokeStyle={"solid"}
-              strokeOpacity={0.5}
-              strokeWeight={5}
-            /> */}
+
             {poly}
-            {/* <Polyline
-              path={[
-                { lat: route.lat, lng: route.lng },
-                { lat: route2.lat, lng: route2.lng },
-              ]}
-              strokeColor={"#5347AA"}
-              strokeStyle={"solid"}
-              strokeOpacity={0.5}
-              strokeWeight={5}
-            /> */}
+
             <PopUp
               isModalOpen={isModalOpen}
               setModalOpen={setModalOpen}

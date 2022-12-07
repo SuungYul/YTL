@@ -1,7 +1,7 @@
 import calculatedData from "../database/calculatedData";
 
 // 현재 초록불인지 아닌지 확인해주는 함수
-function CheckGreen(time, term, waitTime) {
+function CheckGreen(time, term, waitTime, myMinute, mySecond) {
   let greenMinutesStart = Number(time[0] + time[1]);
   let greenSecondStart = Number(time[3] + time[4]);
 
@@ -24,9 +24,23 @@ function CheckGreen(time, term, waitTime) {
   }
 
   const date = new Date();
-  let minutes = date.getMinutes();
-  minutes = minutes % 3;
-  let second = date.getSeconds();
+  let minutes = 0
+  let second = 0
+  if(myMinute == 0){
+    
+    minutes = date.getMinutes();
+    minutes = minutes % 3;
+    second = date.getSeconds();
+  }else{
+    myMinute = myMinute + mySecond / 60
+    myMinute = myMinute % 60
+    mySecond = mySecond % 60
+
+    minutes = myMinute
+    minutes = minutes % 3;
+    second = mySecond
+  }
+
   // console.log(
   //   minutes,
   //   greenMinutesStart,
