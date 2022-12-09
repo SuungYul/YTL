@@ -31,8 +31,8 @@ const Result = ({ mapLat, mapLng }) => {
     const roadPromise = getDocs("Road");
     const shortRoutePromise = getDocs("shortRoute");
     const tP = [];
-    // tP.push(shortRoutePromise, roadPromise);
-    tP.push(roadPromise, shortRoutePromise);
+    tP.push(shortRoutePromise, roadPromise);
+
     setPromise(tP);
 
     crosswalkPromise.then((querySnapshot) => {
