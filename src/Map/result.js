@@ -5,7 +5,6 @@ import { getDocs } from "../database/firebase";
 import { displayMarker, showRoute } from "./map";
 import calculatedData from "../database/calculatedData";
 import { useLocation } from "react-router-dom";
-import FindFastRoute from "../Algorithm/FindFastRoute";
 
 const Result = ({ mapLat, mapLng }) => {
   const pointInfo = useLocation();
@@ -32,10 +31,9 @@ const Result = ({ mapLat, mapLng }) => {
     const roadPromise = getDocs("Road");
     const shortRoutePromise = getDocs("shortRoute");
     const tP = [];
-    tP.push(shortRoutePromise, roadPromise);
+    // tP.push(shortRoutePromise, roadPromise);
+    tP.push(roadPromise, shortRoutePromise);
     setPromise(tP);
-    // setPromise(tP);
-    let loaded = false;
 
     crosswalkPromise.then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -44,33 +42,6 @@ const Result = ({ mapLat, mapLng }) => {
         }
       });
     });
-    FindFastRoute(tP, "LeftRoad3", "RightRoad10")
-    // crosswalkPromise.then((querySnapshot) => {
-    //   querySnapshot.forEach((doc) => {
-    //     if (!totalDB.includes(doc.data())) {
-    //       totalDB.push(doc.data());
-    //     }
-    //     loaded = true;
-    //   });
-    // });
-    // let loaded2 = false;
-    // const totalDB2 = [];
-    // const totalDB3 = [];
-    // roadPromise.then((querySnapshot) => {
-    //   querySnapshot.forEach((doc) => {
-    //     totalDB3.push(doc.data());
-    //     if (!totalDB2.includes(doc.data())) {
-    //       totalDB2.push(
-    //         doc.data().startPoint._lat,
-    //         doc.data().startPoint._long
-    //       );
-    //     }
-    //     totalDB3.push(doc.data());
-    //     loaded2 = true;
-    //   });
-    // });
-    console.log("result", totalPromise, startPoint, endPoint);
-    showRoute(tP, setPoly, startPoint, endPoint);
   }, []);
 
   useEffect(() => {
