@@ -168,7 +168,7 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   let roadNameArray = [];
   let rememberRoute = [];
 
-  console.log(crossWalkCollection);
+  console.log("FindFastRoute", crossWalkCollection, startPoint, endPoint);
   await crossWalkCollection[0].then((결과) => {
     결과.forEach((doc) => {
       allArray[doc.data().name] = doc.data();

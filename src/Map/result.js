@@ -33,9 +33,17 @@ const Result = ({ mapLat, mapLng }) => {
     const shortRoutePromise = getDocs("shortRoute");
     const tP = [];
     tP.push(shortRoutePromise, roadPromise);
+    setPromise(tP);
     // setPromise(tP);
     let loaded = false;
 
+    crosswalkPromise.then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (!totalDB.includes(doc.data())) {
+          totalDB.push(doc.data());
+        }
+      });
+    });
     FindFastRoute(tP, "LeftRoad3", "RightRoad10")
     // crosswalkPromise.then((querySnapshot) => {
     //   querySnapshot.forEach((doc) => {
@@ -64,6 +72,14 @@ const Result = ({ mapLat, mapLng }) => {
     console.log("result", totalPromise, startPoint, endPoint);
     showRoute(tP, setPoly, startPoint, endPoint);
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      showRoute(totalPromise, setPoly, startPoint, endPoint);
+    }, 500);
+
+    console.log("result", totalPromise, startPoint, endPoint, poly);
+  }, [totalPromise]);
 
   useEffect(() => {
     interval = setInterval(() => {
