@@ -192,22 +192,25 @@ function CheckRight(startPoint, endPoint, currentRoad, nextRoad, allArray) {
 
   if (allArray[startPoint].endPoint._lat < allArray[endPoint].startPoint._lat) {
     //내려가는 길
-    if (allArray[nextRoad].startPoint._lat - 0.005 > allArray[endPoint].startPoint._lat) {
+    if (allArray[nextRoad].startPoint._lat > allArray[endPoint].startPoint._lat  + 0.005) {
       return false;
     }
-    if (allArray[nextRoad].endPoint._lat + 0.005 < allArray[startPoint].endPoint._lat) {
+    if (allArray[nextRoad].endPoint._lat < allArray[startPoint].endPoint._lat - 0.005 ) {
       return false;
     }
-
+    
+    if (allArray[currentRoad].endPoint._lat > allArray[nextRoad].startPoint._lat) return false
 
   } else {
     //올라가는길
-    if (allArray[nextRoad].startPoint._lat < allArray[endPoint].startPoint._lat) {
+    if (allArray[nextRoad].startPoint._lat < allArray[endPoint].startPoint._lat - 0.005) {
       return false;
     }
-    if (allArray[nextRoad].startPoint._lat > allArray[startPoint].startPoint._lat) {
+    if (allArray[nextRoad].startPoint._lat > allArray[startPoint].startPoint._lat + 0.005) {
       return false;
     }
+
+    if (allArray[currentRoad].endPoint._lat < allArray[nextRoad].startPoint._lat) return false
 
   }
 }
