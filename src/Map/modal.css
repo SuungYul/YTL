@@ -58,28 +58,24 @@ thead{
   font-weight: 600;
 }
 
-.redstate{
-  width: 30px;
-  height: 30px;
-  background-color: red;
-  border: 1px solid black;
-  border-radius: 50%;
-  text-align: center;
-  display: inline-block;
-}
-
-.greenstate{
-  width: 30px;
-  height: 30px;
-  background-color: rgb(33, 221, 33);
-  border: 1px solid black;
-  border-radius: 50%;
-  display: inline-block;
-}
-
 .projc{
   font-style: oblique;
   text-decoration: underline;
   font-weight: 700;
+  display: inline-block;
+}
+
+.bigBox{
+  border: 3px solid black;
+}
+
+.Btndisplay{
+  margin-left: 65%;
+  display: inline-block;
+}
+
+.getResultBtn{
+  margin-top: 5%;
+  margin-left: 73%;
   display: inline-block;
 }

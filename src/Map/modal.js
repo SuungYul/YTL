@@ -2,6 +2,8 @@ import Modal from "react-modal";
 import React, { useEffect, useState } from "react";
 import "./modal.css";
 import { useNavigate } from "react-router-dom";
+import redpic from './images/red.PNG'
+import greenpic from './images/green.PNG'
 
 Modal.setAppElement("#root");
 
@@ -25,7 +27,7 @@ const findWayStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    height: "10%",
+    height: "15%",
     width: "20%",
     transform: "translate(-40%, -10%)",
   },
@@ -109,9 +111,9 @@ export function FindWay({
         style={findWayStyles}
       >
         <div>
-          <div>
+          <div className="bigBox">
             <span>{startPoint}</span>
-            <button
+            <button className="Btndisplay"
               onClick={() => {
                 setStart(true);
                 setCRVisible(false);
@@ -122,9 +124,9 @@ export function FindWay({
             </button>
           </div>
 
-          <div>
+          <div className="bigBox">
             <span>{endPoint}</span>
-            <button
+            <button className="Btndisplay"
               onClick={() => {
                 setEnd(true);
                 setCRVisible(false);
@@ -135,7 +137,7 @@ export function FindWay({
             </button>
           </div>
           <div>
-            <button
+            <button className="getResultBtn"
               onClick={() => {
                 if (startPoint !== "출발 지점" && endPoint !== "도착 지점") {
                   navigate("/result", {
@@ -188,8 +190,8 @@ export function Help({ isHelpOpen, setHelpOpen }) {
                 신호와 시간을 표시해줍니다.
               </li>
               <li>
-                <div className="redstate">숫자</div> 또는{" "}
-                <div className="greenstate">숫자</div>를 클릭하시면 남은 시간과
+                <img src={redpic} alt="" width="40px"></img> 또는 
+                <img src={greenpic} alt="" width="40px"></img>를 클릭하시면 남은 시간과
                 앞으로의 신호에 대한 시간표를 확인할 수 있습니다.
               </li>
               <li>
