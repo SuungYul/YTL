@@ -285,17 +285,17 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
 }
 
 export async function showRoute(totalPromise, setPoly, startPoint, endPoint) {
+  if (totalPromise.length === 0) return;
   let shortRoute = [];
   let shortTime = 0;
   let out = [];
   setPoly([]);
   console.log(totalPromise);
-  await FindFastRoute(totalPromise, startPoint, endPoint).then(
-    (resolvedData) => (shortRoute = resolvedData)
-  );
+  shortRoute = await FindFastRoute(totalPromise, startPoint, endPoint);
+
   shortTime = shortRoute.time;
   shortRoute = shortRoute.visit;
-
+  console.log("showRoute", shortRoute);
   // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
   // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
 

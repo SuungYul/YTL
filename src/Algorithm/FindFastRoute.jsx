@@ -165,7 +165,8 @@ function dfs(
 }
 
 async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
-  //const db = firebase.firestore();
+  if (crossWalkCollection.length === 0) return;
+
   let crossArray = [];
   let crossNameArray = [];
   let roadArray = [];
@@ -192,7 +193,7 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   });
   const date = new Date();
 
-  // console.log(roadArray[startPoint]);
+  console.log(roadArray[startPoint]);
 
   dfs(
     allArray,
