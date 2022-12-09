@@ -22,7 +22,7 @@ function dfs(
   myMinute,
   mySecond
 ) {
-  if (times > lasttime + 100) return;
+  // if (times > lasttime + 100) return;
   // console.log(currentRoad)
 
   if (allArray[currentRoad].visit == true) {
