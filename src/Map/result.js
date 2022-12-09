@@ -46,7 +46,7 @@ const Result = ({ mapLat, mapLng }) => {
   useEffect(() => {
     setTimeout(() => {
       showRoute(totalPromise, setPoly, startPoint, endPoint);
-    }, 500);
+    }, 1000);
 
     console.log("result", totalPromise, startPoint, endPoint, poly);
   }, [totalPromise]);

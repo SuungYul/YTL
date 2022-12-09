@@ -22,7 +22,10 @@ function dfs(
   myMinute,
   mySecond
 ) {
-  if (times > lasttime) return;
+  if (times > lasttime) {
+    console.log("1번 죽음");
+    return;
+  }
   // count++
   // if(count>10000000)return
 
@@ -30,6 +33,7 @@ function dfs(
   // if (allArray[currentRoad].startPoint._lat < allArray[startRoad].startPoint._lat) return
 
   if (allArray[currentRoad].visit == true) {
+    console.log("2번 죽음");
     return;
   }
   allArray[currentRoad].visit = true;
@@ -42,6 +46,7 @@ function dfs(
         lastRoute.push(allArray[doc].startPoint, allArray[doc].endPoint);
       });
       lasttime = times;
+      console.log("여기가 끝인듯?");
       return;
     }
   }
@@ -193,7 +198,14 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   });
   const date = new Date();
 
-  console.log(roadArray[startPoint]);
+  console.log(
+    crossArray,
+    crossNameArray,
+    roadArray,
+    allArray,
+    roadNameArray,
+    rememberRoute
+  );
 
   dfs(
     allArray,
