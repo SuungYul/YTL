@@ -22,18 +22,14 @@ function dfs(
   myMinute,
   mySecond
 ) {
-  // if (times > lasttime + 100) return;
-  // console.log(currentRoad)
+  // if (times > lasttime) return
 
-  if (allArray[currentRoad].visit == true) {
-    return;
-  }
-  allArray[currentRoad].visit = true;
-  rememberRoute.push(currentRoad);
 
   if (currentRoad == endRoad) {
-    console.log(lastRoute)
+    console.log(rememberRoute)
     if (lasttime > times) {
+      console.log(times)
+      rememberRoute.push(currentRoad);
       lastRoute = [];
       rememberRoute.forEach((doc) => {
         lastRoute.push(allArray[doc].startPoint, allArray[doc].endPoint);
@@ -43,30 +39,22 @@ function dfs(
     }
   }
 
+  if (times > lasttime) return
+
+  if (allArray[currentRoad].visit == true) {
+    return;
+  }
+  allArray[currentRoad].visit = true;
+  rememberRoute.push(currentRoad);
 
   if (crossArray[currentRoad] == undefined) {
+    
     //길이다
     times += roadArray[currentRoad].time;
     for (let i = 0; i < roadArray[currentRoad].connect.length; i++) {
+      if(currentRoad == "LeftRoad4")console.log(lastRoute)
       const nextRoad = allArray[currentRoad].connect[i];
       if (CheckRight(startRoad, endRoad, currentRoad, nextRoad, allArray) == false) continue
-      // if (
-      //   allArray[nextRoad].startPoint._lat >
-      //   allArray[endRoad].startPoint._lat
-      // )
-      //   continue;
-      // if (
-      //   allArray[nextRoad].startPoint._lat <
-      //   allArray[startRoad].startPoint._lat
-      // )
-      //   continue;
-      // if (
-      //   allArray[nextRoad].startPoint._lat < allArray[currentRoad].endPoint._lat
-      // )
-      //   continue;
-      // if (nextRoad == currentRoad) {
-      //   continue;
-      // }
 
       dfs(
         allArray,
@@ -94,27 +82,10 @@ function dfs(
     const walkTIme = crossArray[currentRoad].greenTime - 7;
 
     for (let i = 0; i < crossArray[currentRoad].connect.length; i++) {
+
       const nextRoad = allArray[currentRoad].connect[i];
       if (CheckRight(startRoad, endRoad, currentRoad, nextRoad, allArray) == false) continue
 
-      // if (
-      //   allArray[nextRoad].startPoint._lat >
-      //   allArray[endRoad].startPoint._lat + 0.0001
-      // )
-      //   continue;
-      // if (
-      //   allArray[nextRoad].startPoint._lat <
-      //   allArray[startRoad].startPoint._lat - 0.0001
-      // )
-      //   continue;
-      // if (
-      //   allArray[nextRoad].startPoint._lat < allArray[currentRoad].endPoint._lat
-      // )
-      //   continue;
-
-      // if (nextRoad == currentRoad) {
-      //   continue;
-      // }
 
       if (timeResult.currentSign == "빨간불") {
         dfs(
@@ -218,21 +189,16 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
 
 function CheckRight(startPoint, endPoint, currentRoad, nextRoad, allArray) {
 
-    if (nextRoad == currentRoad) {
-      return false;
-    }
+
   if (allArray[startPoint].endPoint._lat < allArray[endPoint].startPoint._lat) {
     //내려가는 길
-    if (allArray[nextRoad].startPoint._lat > allArray[endPoint].startPoint._lat) {
+    if (allArray[nextRoad].startPoint._lat - 0.005 > allArray[endPoint].startPoint._lat) {
       return false;
     }
-    if (allArray[nextRoad].startPoint._lat < allArray[startPoint].startPoint._lat) {
+    if (allArray[nextRoad].endPoint._lat + 0.005 < allArray[startPoint].endPoint._lat) {
       return false;
     }
 
-    // if(
-    //   allArray[nextRoad].startPoint._lat > allArray[currentRoad].startPoint._lat
-    // )return false;
 
   } else {
     //올라가는길
@@ -242,9 +208,7 @@ function CheckRight(startPoint, endPoint, currentRoad, nextRoad, allArray) {
     if (allArray[nextRoad].startPoint._lat > allArray[startPoint].startPoint._lat) {
       return false;
     }
-    // if(
-    //   allArray[nextRoad].startPoint._lat < allArray[currentRoad].startPoint._lat
-    // )return false;
+
   }
 }
 

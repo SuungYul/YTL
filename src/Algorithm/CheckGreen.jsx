@@ -14,8 +14,8 @@ function CheckGreen(time, term, waitTime, myMinute, mySecond) {
     }
   }
 
-  let greenMinutesEnd = Number(greenMinutesStart);
-  let greenSecondEnd = Number(greenSecondStart + term);
+  let greenMinutesEnd = greenMinutesStart
+  let greenSecondEnd = greenSecondStart + term
   // console.log(greenMinutesStart,greenMinutesEnd)
 
   if (greenSecondEnd >= 60) {
@@ -32,7 +32,9 @@ function CheckGreen(time, term, waitTime, myMinute, mySecond) {
     minutes = minutes % 3;
     second = date.getSeconds();
   }else{
+    
     myMinute = myMinute + mySecond / 60
+    myMinute = Math.floor(myMinute)
     myMinute = myMinute % 60
     mySecond = mySecond % 60
 
