@@ -23,11 +23,6 @@ function dfs(
   mySecond
 ) {
   if (times > lasttime) return;
-  // count++
-  // if(count>10000000)return
-
-  // if (allArray[currentRoad].startPoint._lat > allArray[endRoad].startPoint._lat) return
-  // if (allArray[currentRoad].startPoint._lat < allArray[startRoad].startPoint._lat) return
 
   if (allArray[currentRoad].visit == true) {
     return;
@@ -210,4 +205,23 @@ async function FindFastRoute(crossWalkCollection, startPoint, endPoint) {
   console.log(lastRoute, lasttime);
   return new AlgorithmData(lastRoute, lasttime);
 }
+
+function CheckRight(startPoint, endPoint, nextRoad, allArray){
+  if(allArray[startPoint].endPoint._lat>allArray[endPoint].startPoint._lat){
+
+  }else{
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 export default FindFastRoute;

@@ -50,12 +50,14 @@ const Map = ({ mapLat, mapLng }) => {
         }
       });
     });
+
     const totalDB2 = [];
     roadPromise.then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         totalDB2.push(doc.data());
       });
     });
+
     console.log(totalDB2);
     if (!crMarkerVisible) {
       setResult(displayMarker(totalDB, setModalOpen, setData, crMarkerVisible));
@@ -71,6 +73,9 @@ const Map = ({ mapLat, mapLng }) => {
       );
       console.log("lightResult", lightResult);
     }
+
+    
+
     console.log("crMarkerVisible", crMarkerVisible);
   }, [crMarkerVisible, lightLoad]);
 
@@ -249,7 +254,7 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
       // console.log("----------", value);
       // console.log(value.startPoint, value.endPoint);
       pos.push(value.startPoint, value.endPoint);
-      name.push(value.name, value.name);
+      name.push(value.outName, value.outName);
     });
     console.log("pos", pos);
     console.log("visible", crMarkerVisible);
@@ -285,6 +290,7 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
 }
 
 export async function showRoute(totalPromise, setPoly, startPoint, endPoint) {
+
   let shortRoute = [];
   let shortTime = 0;
   let out = [];
