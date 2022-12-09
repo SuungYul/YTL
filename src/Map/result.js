@@ -33,35 +33,23 @@ const Result = ({ mapLat, mapLng }) => {
     const tP = [];
     tP.push(shortRoutePromise, roadPromise);
     setPromise(tP);
-    let loaded = false;
 
     crosswalkPromise.then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         if (!totalDB.includes(doc.data())) {
           totalDB.push(doc.data());
         }
-        loaded = true;
       });
     });
-    let loaded2 = false;
-    const totalDB2 = [];
-    const totalDB3 = [];
-    roadPromise.then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        totalDB3.push(doc.data());
-        if (!totalDB2.includes(doc.data())) {
-          totalDB2.push(
-            doc.data().startPoint._lat,
-            doc.data().startPoint._long
-          );
-        }
-        totalDB3.push(doc.data());
-        loaded2 = true;
-      });
-    });
-    console.log("result", totalPromise, startPoint, endPoint);
-    showRoute(totalPromise, setPoly, startPoint, endPoint);
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      showRoute(totalPromise, setPoly, startPoint, endPoint);
+    }, 500);
+
+    console.log("result", totalPromise, startPoint, endPoint, poly);
+  }, [totalPromise]);
 
   useEffect(() => {
     interval = setInterval(() => {
