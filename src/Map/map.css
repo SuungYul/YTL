@@ -104,3 +104,32 @@
 .map{
     position: relative;
 }
+
+.toMainBtn{
+    position: absolute;
+    z-index: 1;   
+}
+
+.refreshBtn{
+    position: absolute;
+    z-index: 1;
+
+    color:rgb(255, 255, 255);
+    background-color:rgb(5, 96, 52);
+    width: 70px;
+    height: 70px;
+    left: 60%;
+    top: 7%;
+
+    padding-top: 5px;
+    border: 3px outset rgb(88, 88, 88);
+    border-radius: 10px;
+
+    cursor: pointer;
+    /* opacity: 70%; */
+}
+
+.refreshBtn:hover{
+    color: rgb(5, 96, 52);
+    background-color:rgb(255, 255, 255);
+}

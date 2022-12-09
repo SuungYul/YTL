@@ -1,6 +1,7 @@
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./modal.css";
+import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -74,9 +75,31 @@ function pickPoint() {
   return "road1";
 }
 
-export function FindWay({ isFindOpen, setFindOpen }) {
-  const [startPoint, setstartPoint] = useState("출발 지점");
-  const [endPoint, setendPoint] = useState("도착 지점");
+export function FindWay({
+  isFindOpen,
+  setFindOpen,
+  setPoint,
+  point,
+  setCRVisible,
+  setStart,
+  setEnd,
+  isStart,
+  isEnd,
+}) {
+  const navigate = useNavigate();
+
+  const [startPoint, setStartPoint] = useState("출발 지점");
+  const [endPoint, setEndPoint] = useState("도착 지점");
+  useEffect(() => {
+    console.log("point", point, "isStart", isStart, "isEnd", isEnd);
+    if (isStart) {
+      setStartPoint(point);
+      setStart(false);
+    } else if (isEnd) {
+      setEndPoint(point);
+      setEnd(false);
+    }
+  }, [point]);
 
   return (
     <>
@@ -87,12 +110,12 @@ export function FindWay({ isFindOpen, setFindOpen }) {
       >
         <div>
           <div>
-            <span>출발 내용</span>
-            <button onClick={() => {}}>출발</button>
             <span>{startPoint}</span>
             <button
               onClick={() => {
-                setstartPoint(pickPoint());
+                setStart(true);
+                setCRVisible(false);
+                setFindOpen(false);
               }}
             >
               출발
@@ -103,10 +126,30 @@ export function FindWay({ isFindOpen, setFindOpen }) {
             <span>{endPoint}</span>
             <button
               onClick={() => {
-                setendPoint(pickPoint());
+                setEnd(true);
+                setCRVisible(false);
+                setFindOpen(false);
               }}
             >
               도착
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                if (startPoint !== "출발 지점" && endPoint !== "도착 지점") {
+                  navigate("/result", {
+                    state: {
+                      startPoint: startPoint,
+                      endPoint: endPoint,
+                    },
+                  });
+                } else {
+                  alert("출발 도착을 선택하세요!");
+                }
+              }}
+            >
+              결과 보기
             </button>
           </div>
         </div>
@@ -125,20 +168,36 @@ export function Help({ isHelpOpen, setHelpOpen }) {
         style={HelpStyles}
       >
         <div>
-            <span className="title">도움말</span>
-            <div className="information">
-              <li className="subtitle">정보</li>
-              <p> 이 웹사이트는 <p className="projc">YTL 프로젝트</p>로, 명지대학교 자연캠퍼스 근처의 신호등 정보를 제공하는 곳입니다.</p>
-              <li className="subtitle">사용 방법</li>
-              <ul>
-                <li>상단 중앙 로고에는 프로젝트 이름 YTL과 현재 시간이 표시되어 있습니다.</li>
-                <li>지도는 일반 네이버 지도와 같습니다.</li>
-                <li>숫자가 표시된 빨간색 또는 초록색 원형은 그 위치의 횡단보도 신호와 시간을 표시해줍니다.</li>
-                <li><div className="redstate">숫자</div> 또는 <div className="greenstate">숫자</div>를 클릭하시면 남은 시간과
-                  앞으로의 신호에 대한 시간표를 확인할 수 있습니다.</li>
-                <li>로고 우측의 길 찾기 버튼을 통해 원하는 출발, 도착 마커를 지정하여 최단 시간이 걸리는 경로를 확인할 수 있습니다.</li>  
-              </ul>
-            </div>
+          <span className="title">도움말</span>
+          <div className="information">
+            <li className="subtitle">정보</li>
+            <p>
+              {" "}
+              이 웹사이트는 <p className="projc">YTL 프로젝트</p>로, 명지대학교
+              자연캠퍼스 근처의 신호등 정보를 제공하는 곳입니다.
+            </p>
+            <li className="subtitle">사용 방법</li>
+            <ul>
+              <li>
+                상단 중앙 로고에는 프로젝트 이름 YTL과 현재 시간이 표시되어
+                있습니다.
+              </li>
+              <li>지도는 일반 네이버 지도와 같습니다.</li>
+              <li>
+                숫자가 표시된 빨간색 또는 초록색 원형은 그 위치의 횡단보도
+                신호와 시간을 표시해줍니다.
+              </li>
+              <li>
+                <div className="redstate">숫자</div> 또는{" "}
+                <div className="greenstate">숫자</div>를 클릭하시면 남은 시간과
+                앞으로의 신호에 대한 시간표를 확인할 수 있습니다.
+              </li>
+              <li>
+                로고 우측의 길 찾기 버튼을 통해 원하는 출발, 도착 마커를
+                지정하여 최단 시간이 걸리는 경로를 확인할 수 있습니다.
+              </li>
+            </ul>
+          </div>
         </div>
       </Modal>
     </>
