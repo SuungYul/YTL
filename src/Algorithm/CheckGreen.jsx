@@ -34,7 +34,7 @@ function CheckGreen(time, term, waitTime, myMinute, mySecond) {
   }else{
     
     myMinute = myMinute + mySecond / 60
-    myMinute = Math.floor(myMinute)
+    myMinute = myMinute
     myMinute = myMinute % 60
     mySecond = mySecond % 60
 

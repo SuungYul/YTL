@@ -13,6 +13,7 @@ const Result = ({ mapLat, mapLng }) => {
   const [totalPromise, setPromise] = useState([]);
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [poly, setPoly] = useState([]);
+  const [shortTime, setShortTime] = useState();
   const [isModalOpen, setModalOpen] = useState(false);
   const [now, setNow] = useState(new Date());
 
@@ -25,6 +26,7 @@ const Result = ({ mapLat, mapLng }) => {
   });
   let interval;
   let totalDB = [];
+
   useEffect(() => {
     totalDB = [];
     const crosswalkPromise = getDocs("crosswalk");
@@ -46,10 +48,9 @@ const Result = ({ mapLat, mapLng }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      showRoute(totalPromise, setPoly, startPoint, endPoint);
-    }, 500);
-
-    console.log("result", totalPromise, startPoint, endPoint, poly);
+      showRoute(totalPromise, setPoly, startPoint, endPoint, setShortTime);
+    }, 1000);
+    console.log("result", totalPromise, startPoint, endPoint, poly, shortTime);
   }, [totalPromise]);
 
   useEffect(() => {
@@ -93,6 +94,15 @@ const Result = ({ mapLat, mapLng }) => {
         >
           경로 새로고침
         </button>
+        <p>
+          {shortTime !== undefined
+            ? "소요 시간 " +
+              parseInt(shortTime / 60) +
+              "분 " +
+              parseInt(shortTime % 60) +
+              "초"
+            : "계산 중 입니다..."}
+        </p>
         <NaverMap
           id="react-naver-maps"
           style={{ width: "100%", height: "100vh" }}
