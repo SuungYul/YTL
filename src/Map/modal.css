@@ -67,15 +67,35 @@ thead{
 
 .bigBox{
   border: 3px solid black;
+  border-radius: 5px;
 }
 
 .Btndisplay{
-  margin-left: 65%;
+  color: aliceblue;
+  background-color: rgb(31, 186, 111);
+  border-radius: 5px;
+  margin-left: 86%;
+  padding: 5px;
   display: inline-block;
 }
 
+.Btndisplay:hover{
+  color: rgb(31, 186, 111);
+  background-color: aliceblue;
+}
+
 .getResultBtn{
-  margin-top: 5%;
-  margin-left: 73%;
+  color: aliceblue;
+  background-color: rgb(5, 96, 52);
+  margin-top: 7%;
+  margin-left: 70%;
+  padding:10px;    
+  border-radius: 5px;
   display: inline-block;
+  font-weight: 600;
+}
+
+.getResultBtn:hover{
+  color: rgb(5, 96, 52);
+  background-color: aliceblue;
 }
