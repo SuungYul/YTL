@@ -1,0 +1,29 @@
+.routueinfo{
+    position: absolute;
+    z-index: 1;
+
+    background-color: rgb(31, 186, 111);
+    margin-right: auto;
+    border: 10px outset rgb(0, 51, 25);
+    border-radius: 10px;
+
+    width: 200px;
+    height: 50px;
+    left: 5%;
+    top: 1%;
+
+    /* 글자 가운데 정렬*/
+    align-items: center; 
+    /*display: flex;*/
+    justify-content: center;
+    
+    /* font-size: 30px; */
+    /* opacity: 70%; */
+}
+
+.routetime{
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+    font-weight: 600;
+    padding-left: 30px;
+}

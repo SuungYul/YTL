@@ -73,6 +73,22 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
   );
 }
 
+export function PoliUp({ isModalOpen2, setModalOpen2}) {
+  return (
+    <>
+      <button onClick={() => setModalOpen2(true)}>Modal Open</button>
+      <Modal
+        isOpen2={isModalOpen2}
+        onRequestClose={() => setModalOpen2(false)}
+        
+      >
+        
+        {/* <div>{drawTable(isModalOpen, data)}</div> */}
+      </Modal>
+    </>
+  );
+}
+
 function pickPoint() {
   return "road1";
 }
