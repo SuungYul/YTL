@@ -2,8 +2,8 @@ import Modal from "react-modal";
 import React, { useEffect, useState } from "react";
 import "./modal.css";
 import { useNavigate } from "react-router-dom";
-import redpic from './images/red.PNG'
-import greenpic from './images/green.PNG'
+import redpic from "./images/red.PNG";
+import greenpic from "./images/green.PNG";
 
 Modal.setAppElement("#root");
 
@@ -73,16 +73,11 @@ export function PopUp({ isModalOpen, setModalOpen, data }) {
   );
 }
 
-export function PoliUp({ isModalOpen2, setModalOpen2}) {
+export function PoliUp({ isModalOpen2, setModalOpen2 }) {
   return (
     <>
       <button onClick={() => setModalOpen2(true)}>Modal Open</button>
-      <Modal
-        isOpen2={isModalOpen2}
-        onRequestClose={() => setModalOpen2(false)}
-        
-      >
-        
+      <Modal isOpen2={isModalOpen2} onRequestClose={() => setModalOpen2(false)}>
         {/* <div>{drawTable(isModalOpen, data)}</div> */}
       </Modal>
     </>
@@ -103,18 +98,35 @@ export function FindWay({
   setEnd,
   isStart,
   isEnd,
+  startName,
+  endName,
 }) {
   const navigate = useNavigate();
 
-  const [startPoint, setStartPoint] = useState("출발 지점");
-  const [endPoint, setEndPoint] = useState("도착 지점");
+  const [startPoint, setStartPoint] = useState();
+  const [endPoint, setEndPoint] = useState();
+  const [startRoad, setStartRoad] = useState("출발 지점");
+  const [endRoad, setEndRoad] = useState("도착 지점");
   useEffect(() => {
-    console.log("point", point, "isStart", isStart, "isEnd", isEnd);
+    console.log(
+      "point",
+      point,
+      "isStart",
+      isStart,
+      "isEnd",
+      isEnd,
+      "startName",
+      startName,
+      "endName",
+      endName
+    );
     if (isStart) {
       setStartPoint(point);
+      setStartRoad(startName);
       setStart(false);
     } else if (isEnd) {
       setEndPoint(point);
+      setEndRoad(endName);
       setEnd(false);
     }
   }, [point]);
@@ -128,8 +140,9 @@ export function FindWay({
       >
         <div>
           <div className="bigBox">
-            <span>{startPoint}</span>
-            <button className="Btndisplay"
+            <span>{startRoad}</span>
+            <button
+              className="Btndisplay"
               onClick={() => {
                 setStart(true);
                 setCRVisible(false);
@@ -141,21 +154,25 @@ export function FindWay({
           </div>
 
           <div className="bigBox">
-            <span>{endPoint}</span>
-            <button className="Btndisplay"
+            <span>{endRoad}</span>
+            <button
+              className="Btndisplay"
               onClick={() => {
-                setEnd(true);
-                setCRVisible(false);
-                setFindOpen(false);
+                setTimeout(() => {
+                  setEnd(true);
+                  setCRVisible(false);
+                  setFindOpen(false);
+                }, 500);
               }}
             >
               도착
             </button>
           </div>
           <div>
-            <button className="getResultBtn"
+            <button
+              className="getResultBtn"
               onClick={() => {
-                if (startPoint !== "출발 지점" && endPoint !== "도착 지점") {
+                if (startRoad !== "출발 지점" && endRoad !== "도착 지점") {
                   navigate("/result", {
                     state: {
                       startPoint: startPoint,
@@ -206,9 +223,9 @@ export function Help({ isHelpOpen, setHelpOpen }) {
                 신호와 시간을 표시해줍니다.
               </li>
               <li>
-                <img src={redpic} alt="" width="40px"></img> 또는 
-                <img src={greenpic} alt="" width="40px"></img>를 클릭하시면 남은 시간과
-                앞으로의 신호에 대한 시간표를 확인할 수 있습니다.
+                <img src={redpic} alt="" width="40px"></img> 또는
+                <img src={greenpic} alt="" width="40px"></img>를 클릭하시면 남은
+                시간과 앞으로의 신호에 대한 시간표를 확인할 수 있습니다.
               </li>
               <li>
                 로고 우측의 길 찾기 버튼을 통해 원하는 출발, 도착 마커를

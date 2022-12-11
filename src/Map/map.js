@@ -7,7 +7,7 @@ import FindFastRoute from "../Algorithm/FindFastRoute";
 import calculatedData from "../database/calculatedData";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
-import { FindWay, PopUp,PoliUp, Help } from "./modal";
+import { FindWay, PopUp, PoliUp, Help } from "./modal";
 import "./map.css";
 import AlgorithmData from "../database/AlgorithmData";
 import { log } from "react-modal/lib/helpers/ariaAppHider";
@@ -17,6 +17,9 @@ const Map = ({ mapLat, mapLng }) => {
 
   const [isStart, setStart] = useState(false);
   const [isEnd, setEnd] = useState(false);
+  const [startName, setStartName] = useState();
+  const [endName, setEndName] = useState();
+
   const [point, setPoint] = useState(null);
 
   const [crMarkerVisible, setCRVisible] = useState(true);
@@ -70,7 +73,9 @@ const Map = ({ mapLat, mapLng }) => {
         setPoint,
         isStart,
         isEnd,
-        setLightLoad
+        setLightLoad,
+        setStartName,
+        setEndName
       );
       console.log("lightResult", lightResult);
     }
@@ -149,7 +154,6 @@ const Map = ({ mapLat, mapLng }) => {
             <PoliUp
               isModalOpen2={isModalOpen2}
               setModalOpen2={setModalOpen2}
-              
             ></PoliUp>
             <FindWay
               isFindOpen={isFindOpen}
@@ -161,6 +165,8 @@ const Map = ({ mapLat, mapLng }) => {
               setEnd={setEnd}
               isStart={isStart}
               isEnd={isEnd}
+              startName={startName}
+              endName={endName}
             />
             <Help isHelpOpen={isHelpOpen} setHelpOpen={setHelpOpen} />;
           </NaverMap>
@@ -245,11 +251,14 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
   setPoint,
   isStart,
   isEnd,
-  setLightLoad
+  setLightLoad,
+  setStartName,
+  setEndName
 ) {
   let index = 0;
   let pos = []; // db doc안에 모든 position 좌표
   let name = [];
+  let outName = [];
   const r = [];
   console.log("here is light marker");
   console.log("totalDB3", totalDB3);
@@ -259,10 +268,10 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
       // console.log(value.startPoint, value.endPoint);
       pos.push(value.startPoint, value.endPoint);
       name.push(value.name, value.name);
+      outName.push(value.outName, value.outName);
     });
     console.log("pos", pos);
     console.log("visible", crMarkerVisible);
-
     for (let i = 0; i < pos.length; i++) {
       r.push(
         <Marker
@@ -273,12 +282,13 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
             lng: pos[i]._long,
           }}
           onClick={() => {
-            alert(name[i]);
-
+            console.log("outName", outName);
             if (isStart) {
               setPoint(name[i]);
+              setStartName(outName[i]);
             } else if (isEnd) {
               setPoint(name[i]);
+              setEndName(outName[i]);
             } else {
               alert("Error! 출발 또는 목적 버튼을 클릭 후 선택해주세요");
             }
@@ -287,6 +297,7 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
         />
       );
     }
+
     console.log("r", r);
     setLight(r);
     setLightLoad(true);
@@ -297,8 +308,8 @@ export async function showMark(
   totalPromise,
   setMark,
   startPoint,
-  endPoint,  
-  crMarkerVisible,
+  endPoint,
+  crMarkerVisible
 ) {
   if (totalPromise.length === 0) return;
   let shortRoute = [];
@@ -307,61 +318,55 @@ export async function showMark(
   console.log(totalPromise);
   shortRoute = await FindFastRoute(totalPromise, startPoint, endPoint);
 
-  
   shortRoute = shortRoute.visit;
   console.log("showRoute", shortRoute);
-   // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
+  // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
   // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
   out.push(
     <Marker
-    key={0}
-    visible={crMarkerVisible}
-    position={{
-      lat: shortRoute[0]._lat, 
-      lng: shortRoute[0]._long
-    }}
-    icon={{
-      content:
-      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">'+
-      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">'+
-      '<!---->'+
-      '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">'+
-      '</button>'+
-      '<!---->'+
-      '<div _ngcontent-psu-c201="" class="icon start retina">'+
-      '</div>'+
-      '</div>'+
-      '</div>'
-   }}
-    
+      key={0}
+      visible={crMarkerVisible}
+      position={{
+        lat: shortRoute[0]._lat,
+        lng: shortRoute[0]._long,
+      }}
+      icon={{
+        content:
+          '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">' +
+          '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">' +
+          "<!---->" +
+          '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">' +
+          "</button>" +
+          "<!---->" +
+          '<div _ngcontent-psu-c201="" class="icon start retina">' +
+          "</div>" +
+          "</div>" +
+          "</div>",
+      }}
     />
-
   );
   out.push(
     <Marker
-    key={shortRoute.length-1}
-    visible={crMarkerVisible}
-    position={{
-      lat: shortRoute[shortRoute.length-1]._lat, 
-      lng: shortRoute[shortRoute.length-1]._long
-    }}
-    icon={{
-      content:
-      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">'+
-      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">'+
-      '<!---->'+
-      '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">'+
-      '</button>'+
-      '<!---->'+
-      '<div _ngcontent-psu-c201="" class="goal icon retina">'+
-      '</div>'+
-      '</div>'+
-      '</div>'
-      
-    }}
-    
+      key={shortRoute.length - 1}
+      visible={crMarkerVisible}
+      position={{
+        lat: shortRoute[shortRoute.length - 1]._lat,
+        lng: shortRoute[shortRoute.length - 1]._long,
+      }}
+      icon={{
+        content:
+          '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">' +
+          '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">' +
+          "<!---->" +
+          '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">' +
+          "</button>" +
+          "<!---->" +
+          '<div _ngcontent-psu-c201="" class="goal icon retina">' +
+          "</div>" +
+          "</div>" +
+          "</div>",
+      }}
     />
-
   );
   setMark(out);
 }
@@ -386,25 +391,19 @@ export async function showRoute(
   shortTime = shortRoute.time;
   shortRoute = shortRoute.visit;
   console.log("showRoute", shortRoute);
-  
- 
-  
+
   for (let temp = 0; temp < shortRoute.length; temp += 2) {
-    
     out.push(
-      
       <Polyline
         key={temp}
         path={[
           { lat: shortRoute[temp]._lat, lng: shortRoute[temp]._long },
           { lat: shortRoute[temp + 1]._lat, lng: shortRoute[temp + 1]._long },
         ]}
-        strokeColor={"#5347AA"}
+        strokeColor={"#0475F4"}
         strokeStyle={"solid"}
-        strokeOpacity={0.5}
-        strokeWeight={5}
-        
-       
+        strokeOpacity={1}
+        strokeWeight={10}
       />
     );
 
@@ -413,5 +412,4 @@ export async function showRoute(
   console.log(out);
   setPoly(out);
   setShortTime(shortTime);
-  
 }
