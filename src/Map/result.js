@@ -2,9 +2,11 @@ import { NaverMap, Marker, Polyline, Rectangle } from "react-naver-maps";
 import { RenderAfterNavermapsLoaded } from "react-naver-maps";
 import { useState, useEffect } from "react";
 import { getDocs } from "../database/firebase";
-import { displayMarker, showRoute } from "./map";
+import { displayMarker, showMark, showRoute } from "./map";
 import calculatedData from "../database/calculatedData";
 import { useLocation } from "react-router-dom";
+
+import"./result.css";
 
 const Result = ({ mapLat, mapLng }) => {
   const pointInfo = useLocation();
@@ -13,8 +15,10 @@ const Result = ({ mapLat, mapLng }) => {
   const [totalPromise, setPromise] = useState([]);
   const YOUR_CLIENT_ID = "w4msaekuxw";
   const [poly, setPoly] = useState([]);
+  const [mark, setMark] = useState([]);
   const [shortTime, setShortTime] = useState();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen2, setModalOpen2] = useState(false);
   const [now, setNow] = useState(new Date());
 
   const [result, setResult] = useState([]);
@@ -48,7 +52,8 @@ const Result = ({ mapLat, mapLng }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      showRoute(totalPromise, setPoly, startPoint, endPoint, setShortTime);
+      showRoute(totalPromise, setPoly, startPoint, endPoint, setShortTime,setModalOpen2);
+      showMark(totalPromise, setMark, startPoint, endPoint,);
     }, 1000);
     console.log("result", totalPromise, startPoint, endPoint, poly, shortTime);
   }, [totalPromise]);
@@ -94,7 +99,8 @@ const Result = ({ mapLat, mapLng }) => {
         >
           경로 새로고침
         </button>
-        <p>
+        <div className="routueinfo">
+        <p className="routetime">
           {shortTime !== undefined
             ? "소요 시간 " +
               parseInt(shortTime / 60) +
@@ -103,6 +109,7 @@ const Result = ({ mapLat, mapLng }) => {
               "초"
             : "계산 중 입니다..."}
         </p>
+        </div>
         <NaverMap
           id="react-naver-maps"
           style={{ width: "100%", height: "100vh" }}
@@ -111,7 +118,19 @@ const Result = ({ mapLat, mapLng }) => {
           defaultZoom={17}
           zIndex={0}
         >
+          <div className="routueinfo">
+        <p className="routetime">
+          {shortTime !== undefined
+            ? "소요 시간 " +
+              parseInt(shortTime / 60) +
+              "분 " +
+              parseInt(shortTime % 60) +
+              "초"
+            : "계산 중 입니다..."}
+        </p>
+        </div>
           {result}
+          {mark}
           {poly}
         </NaverMap>
       </div>

@@ -7,7 +7,7 @@ import FindFastRoute from "../Algorithm/FindFastRoute";
 import calculatedData from "../database/calculatedData";
 import { Crosswalk } from "../database/data";
 import { getPosition, getData, db, getDocs } from "../database/firebase";
-import { FindWay, PopUp, Help } from "./modal";
+import { FindWay, PopUp,PoliUp, Help } from "./modal";
 import "./map.css";
 import AlgorithmData from "../database/AlgorithmData";
 import { log } from "react-modal/lib/helpers/ariaAppHider";
@@ -22,6 +22,7 @@ const Map = ({ mapLat, mapLng }) => {
   const [crMarkerVisible, setCRVisible] = useState(true);
 
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen2, setModalOpen2] = useState(false);
   const [isFindOpen, setFindOpen] = useState(false);
   const [isHelpOpen, setHelpOpen] = useState(false);
   const [result, setResult] = useState([]);
@@ -145,6 +146,11 @@ const Map = ({ mapLat, mapLng }) => {
               setModalOpen={setModalOpen}
               data={data}
             ></PopUp>
+            <PoliUp
+              isModalOpen2={isModalOpen2}
+              setModalOpen2={setModalOpen2}
+              
+            ></PoliUp>
             <FindWay
               isFindOpen={isFindOpen}
               setFindOpen={setFindOpen}
@@ -287,12 +293,87 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
   }, 500);
 }
 
+export async function showMark(
+  totalPromise,
+  setMark,
+  startPoint,
+  endPoint,  
+  crMarkerVisible,
+) {
+  if (totalPromise.length === 0) return;
+  let shortRoute = [];
+  let out = [];
+  setMark([]);
+  console.log(totalPromise);
+  shortRoute = await FindFastRoute(totalPromise, startPoint, endPoint);
+
+  
+  shortRoute = shortRoute.visit;
+  console.log("showRoute", shortRoute);
+   // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
+  // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
+  out.push(
+    <Marker
+    key={0}
+    visible={crMarkerVisible}
+    position={{
+      lat: shortRoute[0]._lat, 
+      lng: shortRoute[0]._long
+    }}
+    icon={{
+      content:
+      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">'+
+      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">'+
+      '<!---->'+
+      '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">'+
+      '</button>'+
+      '<!---->'+
+      '<div _ngcontent-psu-c201="" class="icon start retina">'+
+      '</div>'+
+      '</div>'+
+      '</div>'
+   }}
+    
+    />
+
+  );
+  out.push(
+    <Marker
+    key={shortRoute.length-1}
+    visible={crMarkerVisible}
+    position={{
+      lat: shortRoute[shortRoute.length-1]._lat, 
+      lng: shortRoute[shortRoute.length-1]._long
+    }}
+    icon={{
+      content:
+      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item-popup" style="position: absolute; cursor: pointer;">'+
+      '<div _ngcontent-psu-c201="" class="directions-map-popup-icon-item">'+
+      '<!---->'+
+      '<button _ngcontent-psu-c201="" class="remove-button retina ng-star-inserted">'+
+      '</button>'+
+      '<!---->'+
+      '<div _ngcontent-psu-c201="" class="goal icon retina">'+
+      '</div>'+
+      '</div>'+
+      '</div>'
+      
+    }}
+    
+    />
+
+  );
+  setMark(out);
+}
+
 export async function showRoute(
   totalPromise,
   setPoly,
   startPoint,
   endPoint,
-  setShortTime
+  setShortTime,
+  crMarkerVisible,
+  setModalOpen2
 ) {
   if (totalPromise.length === 0) return;
   let shortRoute = [];
@@ -305,11 +386,13 @@ export async function showRoute(
   shortTime = shortRoute.time;
   shortRoute = shortRoute.visit;
   console.log("showRoute", shortRoute);
-  // setroute({ lng: shortRoute[0]._long, lat: shortRoute[0]._lat })
-  // setroute2({ lng: shortRoute[1]._long, lat: shortRoute[1]._lat })
-
+  
+ 
+  
   for (let temp = 0; temp < shortRoute.length; temp += 2) {
+    
     out.push(
+      
       <Polyline
         key={temp}
         path={[
@@ -320,6 +403,8 @@ export async function showRoute(
         strokeStyle={"solid"}
         strokeOpacity={0.5}
         strokeWeight={5}
+        
+       
       />
     );
 
@@ -328,4 +413,5 @@ export async function showRoute(
   console.log(out);
   setPoly(out);
   setShortTime(shortTime);
+  
 }
