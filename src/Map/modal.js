@@ -27,7 +27,7 @@ const findWayStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    height: "15%",
+    height: "25%",
     width: "20%",
     transform: "translate(-40%, -10%)",
   },
