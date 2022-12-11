@@ -158,11 +158,9 @@ export function FindWay({
             <button
               className="Btndisplay"
               onClick={() => {
-                setTimeout(() => {
-                  setEnd(true);
-                  setCRVisible(false);
-                  setFindOpen(false);
-                }, 500);
+                setEnd(true);
+                setCRVisible(false);
+                setFindOpen(false);
               }}
             >
               도착

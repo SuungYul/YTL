@@ -286,6 +286,7 @@ function lightMarker( //신호등 마커 근데 사실 길 시작과 끝이라�
             if (isStart) {
               setPoint(name[i]);
               setStartName(outName[i]);
+              setEndName(outName[i]);
             } else if (isEnd) {
               setPoint(name[i]);
               setEndName(outName[i]);

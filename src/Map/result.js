@@ -6,7 +6,7 @@ import { displayMarker, showMark, showRoute } from "./map";
 import calculatedData from "../database/calculatedData";
 import { useLocation } from "react-router-dom";
 
-import"./result.css";
+import "./result.css";
 
 const Result = ({ mapLat, mapLng }) => {
   const pointInfo = useLocation();
@@ -52,8 +52,15 @@ const Result = ({ mapLat, mapLng }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      showRoute(totalPromise, setPoly, startPoint, endPoint, setShortTime,setModalOpen2);
-      showMark(totalPromise, setMark, startPoint, endPoint,);
+      showRoute(
+        totalPromise,
+        setPoly,
+        startPoint,
+        endPoint,
+        setShortTime,
+        setModalOpen2
+      );
+      showMark(totalPromise, setMark, startPoint, endPoint);
     }, 1000);
     console.log("result", totalPromise, startPoint, endPoint, poly, shortTime);
   }, [totalPromise]);
@@ -97,18 +104,18 @@ const Result = ({ mapLat, mapLng }) => {
             window.location.replace("/result");
           }}
         >
-          경로 새로고침
+          {"경로\n새로고침"}
         </button>
         <div className="routueinfo">
-        <p className="routetime">
-          {shortTime !== undefined
-            ? "소요 시간 " +
-              parseInt(shortTime / 60) +
-              "분 " +
-              parseInt(shortTime % 60) +
-              "초"
-            : "계산 중 입니다..."}
-        </p>
+          <p className="routetime">
+            {shortTime !== undefined
+              ? "소요 시간 " +
+                parseInt(shortTime / 60) +
+                "분 " +
+                parseInt(shortTime % 60) +
+                "초"
+              : "계산 중 입니다..."}
+          </p>
         </div>
         <NaverMap
           id="react-naver-maps"
@@ -119,16 +126,16 @@ const Result = ({ mapLat, mapLng }) => {
           zIndex={0}
         >
           <div className="routueinfo">
-        <p className="routetime">
-          {shortTime !== undefined
-            ? "소요 시간 " +
-              parseInt(shortTime / 60) +
-              "분 " +
-              parseInt(shortTime % 60) +
-              "초"
-            : "계산 중 입니다..."}
-        </p>
-        </div>
+            <p className="routetime">
+              {shortTime !== undefined
+                ? "소요 시간 " +
+                  parseInt(shortTime / 60) +
+                  "분 " +
+                  parseInt(shortTime % 60) +
+                  "초"
+                : "계산 중 입니다..."}
+            </p>
+          </div>
           {result}
           {mark}
           {poly}
